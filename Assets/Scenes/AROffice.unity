@@ -2277,6 +2277,7 @@ MonoBehaviour:
   ARPlaneManager: {fileID: 1845542516}
   ARRaycastManager: {fileID: 1845542517}
   ARCamera: {fileID: 917618961}
+  buttonText: {fileID: 864570102}
 --- !u!1 &1896518234
 GameObject:
   m_ObjectHideFlags: 0
