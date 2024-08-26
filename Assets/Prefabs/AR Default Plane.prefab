@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6012192414611029357}
   - component: {fileID: 2006758842128228529}
   - component: {fileID: 8170775440031808748}
-  - component: {fileID: 6072024354336080224}
+  - component: {fileID: 3756971074178207718}
   m_Layer: 0
   m_Name: AR Default Plane
   m_TagString: Untagged
@@ -242,15 +242,18 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &6072024354336080224
+--- !u!114 &3756971074178207718
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8691434579566451223}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4e20d23a16d8a54894ec0a0176cf577, type: 3}
+  m_Script: {fileID: 11500000, guid: c04123e3b7b27794a94b0afbd555029d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ARPlaneManager: {fileID: 0}
+  ARRaycastManager: {fileID: 0}
+  ARCamera: {fileID: 0}

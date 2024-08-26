@@ -1296,8 +1296,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FocusMode: -1
   m_LightEstimationMode: -1
-  m_AutoFocus: 1
-  m_LightEstimation: 0
+  m_AutoFocus: 0
+  m_LightEstimation: -1
   m_FacingDirection: 1
   m_RenderMode: 0
 --- !u!81 &917618960
@@ -2183,7 +2183,7 @@ GameObject:
   - component: {fileID: 1845542518}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
-  m_TagString: Untagged
+  m_TagString: origin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2226,13 +2226,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1845542512}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 4}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.9104138, y: 0.81854576, z: -8.786749}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1307660720}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1896518236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1845542516
 MonoBehaviour:
@@ -2274,10 +2274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c04123e3b7b27794a94b0afbd555029d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ARPlaneManager: {fileID: 1845542516}
-  ARRaycastManager: {fileID: 1845542517}
   ARCamera: {fileID: 917618961}
-  buttonText: {fileID: 864570102}
 --- !u!1 &1896518234
 GameObject:
   m_ObjectHideFlags: 0
@@ -2321,7 +2318,8 @@ Transform:
   m_LocalPosition: {x: -0.9104138, y: -0.81854576, z: 12.786749}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1845542515}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &477184872482076661
@@ -2439,6 +2437,5 @@ SceneRoots:
   - {fileID: 702413259}
   - {fileID: 1528921434}
   - {fileID: 1896518236}
-  - {fileID: 1845542515}
   - {fileID: 45869453}
   - {fileID: 477184872482076661}
