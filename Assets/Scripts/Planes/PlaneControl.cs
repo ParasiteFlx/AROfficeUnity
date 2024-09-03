@@ -34,8 +34,8 @@ public class PlaneControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    // In Update we keep track of the number of activePlanes and we manage merged planes. It seems that a merged plane is a trackable and the planes that make it are trackables too,
-    // so those still appear as active planes. Here we handle that. We also handle merged planes that merge into another larger plane.
+    // In Update I keep track of the number of activePlanes and I manage merged planes. It seems that a merged plane is a trackable and the planes that make it are trackables too,
+    // so those still appear as active planes. Here I handle that. I also handle merged planes that merge into another larger plane.
     // Here I also enable ARPlaneManager as needed to avoid a clutter of indistinguishable planes that make for a bad user experience.
     // The raycast is shot here.
     // The accuracy of nrActivePlanes is vital for the script.
@@ -99,8 +99,8 @@ public class PlaneControl : MonoBehaviour
         if (ARRaycastManager.Raycast(screenCenter, raycastHits, TrackableType.Planes))
         {
             // buttonText.text = "Dupa Raycast
-            restorePlane(raycastHits);
-            overlappedPlanes(raycastHits);
+            RestorePlane(raycastHits);
+            OverlappedPlanes(raycastHits);
         }
 
         foreach (TrackableId key in mergedPlanes.Keys)
@@ -111,7 +111,7 @@ public class PlaneControl : MonoBehaviour
 
         nrActivePlanes += mergedPlanes.Count;
 
-        if (nrActivePlanes > 4)
+        if (nrActivePlanes > 3)
         {
             ARPlaneManager.enabled = false;
         }
@@ -129,14 +129,14 @@ public class PlaneControl : MonoBehaviour
             }
         }
 
-        buttonText.text = ARPlaneManager.isActiveAndEnabled.ToString() + " " + nrActivePlanes.ToString() + " " + finalPlaneCount.ToString();
+        //buttonText.text = ARPlaneManager.isActiveAndEnabled.ToString() + " " + nrActivePlanes.ToString() + " " + finalPlaneCount.ToString();
 
     }
 
     //The restorePlane function acts as a safety net. When some surfaces, that have been previously been disabled, need to reappear in an empty spot, with the raycast I enable
     //only the last disabled plane detected.
 
-    private void restorePlane(List<ARRaycastHit> raycastHits)
+    private void RestorePlane(List<ARRaycastHit> raycastHits)
     {
         noActivePlanes = true;
 
@@ -166,7 +166,7 @@ public class PlaneControl : MonoBehaviour
     //To try not to disable planes on different levels of surfaces, I check for planes that have a distance smaller than 1f between them. (1f is commonly thought as 1 m, but I doubt it)
     //In the end it calls clearDisabledPlanes.
 
-    private void overlappedPlanes(List<ARRaycastHit> raycastHits)
+    private void OverlappedPlanes(List<ARRaycastHit> raycastHits)
     {
         float overlapMaxDistance = 0.5f;
 
@@ -233,7 +233,7 @@ public class PlaneControl : MonoBehaviour
 
             }
 
-            clearDisabledPlanes(disabledPlanes);
+            ClearDisabledPlanes(disabledPlanes);
 
         }
 
@@ -241,7 +241,7 @@ public class PlaneControl : MonoBehaviour
 
     //Handles cleaning data and provides a good way to manage disabled planes that are still available for the ARPlaneManager
 
-    private void clearDisabledPlanes(List<ARPlane> disabledPlanes)
+    private void ClearDisabledPlanes(List<ARPlane> disabledPlanes)
     {
         ARPlane output;
         List<ARPlane> copyList = new List<ARPlane>(disabledPlanes);

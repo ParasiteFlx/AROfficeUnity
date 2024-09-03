@@ -6,12 +6,18 @@ using UnityEngine.UI;
 
 public class ButtonPress : MonoBehaviour
 {
-    public TextMeshPro phaseDisplayText;
+    [SerializeField]
+    private TextMeshPro phaseDisplayText;
     private Touch theTouch;
     private float timeTouchEnded;
     private float displayTime = 0.5f;
 
-    private void Update()
+    private void Start()
+    {
+       
+    }
+
+    void Update()
     {
         theTouch = Input.GetTouch(0);
         if (Input.touchCount > 0)
