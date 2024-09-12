@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using TMPro;
 using Unity.Collections;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -136,7 +133,7 @@ public class PlaneSelection : MonoBehaviour
                             break;
                         }
                     }
-                    buttonText.text = counterPlaneCounter.ToString();
+                    //buttonText.text = counterPlaneCounter.ToString();
                     selectedPlane.GetComponent<LineRenderer>().startWidth = 0.03f;
                     selectedPlane.GetComponent<LineRenderer>().endWidth = 0.03f;
                     previousPlane = selectedPlane;
