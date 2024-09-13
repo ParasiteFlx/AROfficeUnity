@@ -15,11 +15,6 @@ public class ButtonPress : MonoBehaviour
         buttonTextDebug = buttonTextGameObject.GetComponent<TextMeshPro>();
     }
 
-    private void Update()
-    {
-
-    }
-
     private void OnEnable()
     {
         LeanTouch.OnFingerTap += ButtonPressLogic;
