@@ -46,12 +46,12 @@ public class PlaneControl : MonoBehaviour
                 ARPlane mergedPlane = plane.subsumedBy;
 
                 if (mergedPlane != null)
-                {                  
+                {
                     if (mergedPlanes.ContainsKey(mergedPlane.trackableId))
                     {   //Check for duplicates
                         if (!mergedPlanes[mergedPlane.trackableId].Contains(plane.trackableId))
-                        mergedPlanes[mergedPlane.trackableId].Add(plane.trackableId);
-                       
+                            mergedPlanes[mergedPlane.trackableId].Add(plane.trackableId);
+
                     }
                     else
                     {
@@ -102,7 +102,7 @@ public class PlaneControl : MonoBehaviour
 
         foreach (TrackableId key in mergedPlanes.Keys)
         {
-           nrActivePlanes-=mergedPlanes[key].Count;
+            nrActivePlanes -= mergedPlanes[key].Count;
 
         }
 
@@ -160,12 +160,13 @@ public class PlaneControl : MonoBehaviour
 
     //Manages most of the overlapping planes that appear due to some small height difference or due to some feature points appearing on patterns in the scene.
     //It separates planes between vertical and horizontal and with the help of a raycast shot from the screencenter disables all planes in, let's call it ray shot, except the last one.
-    //To try not to disable planes on different levels of surfaces, I check for planes that have a distance smaller than 1f between them. (1f is commonly thought as 1 m, but I doubt it)
+    //The planes are being disabled with the DisablePlanes function.
     //In the end it calls clearDisabledPlanes.
 
     private void OverlappedPlanes(List<ARRaycastHit> raycastHits)
     {
-        float overlapMaxDistance = 0.5f;
+        //float overlapMaxDistance = 0.5f;
+
 
         if (raycastHits.Count > 1)
         {
@@ -185,55 +186,57 @@ public class PlaneControl : MonoBehaviour
                 }
             }
 
-            if (verticalPlanes.Count > 1)
-            {
-                for (int i = 0; i < verticalPlanes.Count - 1; i++)
-                {
-                    var plane = verticalPlanes[i];
-                    if (plane.gameObject.activeSelf && !disabledPlanes.Contains(plane))
-                    {
-                        if (Vector3.Distance(plane.center, verticalPlanes[verticalPlanes.Count - 1].center) < overlapMaxDistance)
-                        {
-                            if(plane.subsumedBy!=null)
-                            {
-                                mergedPlanes.Remove(plane.subsumedBy.trackableId);
-                            }
-
-                            plane.gameObject.SetActive(false);
-                            disabledPlanes.Add(plane);
-                          
-                        }
-                    }
-                }
-            }
-
-            if (horizontalPlanes.Count > 1)
-            {
-                for (int i = 0; i < horizontalPlanes.Count - 1; i++)
-                {
-                    var plane = horizontalPlanes[i];
-                    if (plane.gameObject.activeSelf && !disabledPlanes.Contains(plane))
-                    {
-                        if (Vector3.Distance(plane.center, horizontalPlanes[horizontalPlanes.Count - 1].center) < overlapMaxDistance)
-                        {
-                            if (plane.subsumedBy != null)
-                            {
-                                mergedPlanes.Remove(plane.subsumedBy.trackableId);
-                            }
-
-                            plane.gameObject.SetActive(false);
-                            disabledPlanes.Add(plane);
-                          
-                        }
-                    }
-                }
-
-            }
-
+            DisablePlanes(verticalPlanes);
+            DisablePlanes(horizontalPlanes);
             ClearDisabledPlanes(disabledPlanes);
 
         }
 
+    }
+
+    //Disables Planes based on their size. Only the "biggest plane" remains active. 
+
+    private void DisablePlanes(List<ARPlane> Planes)
+    {
+        if (Planes.Count > 1)
+        {
+            ARPlane biggestPlane = Planes[0];
+            Vector2 biggestPlaneSize = Planes[0].size;
+
+            for (int i = 1; i < Planes.Count; i++)
+            {
+                var plane = Planes[i];
+
+                if (plane.gameObject.activeSelf)
+                {
+                    if (plane.size[0] >= biggestPlaneSize[0] && plane.size[1] >= biggestPlaneSize[1])
+                    {
+                        if (biggestPlane.subsumedBy != null)
+                        {
+                            mergedPlanes.Remove(biggestPlane.subsumedBy.trackableId);
+                        }
+                        biggestPlane.gameObject.SetActive(false);
+                        disabledPlanes.Add(plane);
+                        biggestPlane = plane;
+                        biggestPlaneSize = plane.size;
+                    }
+                    else
+                    {
+                        if (plane.subsumedBy != null)
+                        {
+                            mergedPlanes.Remove(plane.subsumedBy.trackableId);
+                        }
+
+                        plane.gameObject.SetActive(false);
+                        disabledPlanes.Add(plane);
+
+                    }
+                }
+
+            }
+
+
+        }
     }
 
     //Handles cleaning data and provides a good way to manage disabled planes that are still available for the ARPlaneManager
@@ -243,7 +246,7 @@ public class PlaneControl : MonoBehaviour
         ARPlane output;
         List<ARPlane> copyList = new List<ARPlane>(disabledPlanes);
         foreach (ARPlane plane in copyList)
-        {           
+        {
             if (!ARPlaneManager.trackables.TryGetTrackable(plane.trackableId, out output))
             {
                 disabledPlanes.Remove(plane);
