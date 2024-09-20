@@ -8,11 +8,12 @@ using UnityEngine.XR.ARSubsystems;
 
 public class PlaneControl : MonoBehaviour
 {
-    private ARPlaneManager ARPlaneManager;
-    private ARRaycastManager ARRaycastManager;
+    private ARPlaneManager arPlaneManager;
+    private ARRaycastManager arRaycastManager;
     [SerializeField]
-    private Camera ARCamera;
-    private TextMeshPro buttonText;
+    private Camera arCamera;
+    [SerializeField]
+    private TextMeshPro debugText;
     private List<ARPlane> disabledPlanes = new List<ARPlane>();
     private List<ARRaycastHit> raycastHits = new List<ARRaycastHit>();
     private Boolean noActivePlanes;
@@ -24,10 +25,10 @@ public class PlaneControl : MonoBehaviour
     // Intializes ARPlaneManager and ARRaycastManager, the main components of the script.
     void Start()
     {
-        ARPlaneManager = gameObject.GetComponent<ARPlaneManager>();
-        ARRaycastManager = gameObject.GetComponent<ARRaycastManager>();
-
-        buttonText = GameObject.FindGameObjectWithTag("debug").GetComponent<TextMeshPro>();
+        arPlaneManager = gameObject.GetComponent<ARPlaneManager>();
+        arRaycastManager = gameObject.GetComponent<ARRaycastManager>();
+       
+        
     }
 
     // Update is called once per frame
@@ -38,8 +39,9 @@ public class PlaneControl : MonoBehaviour
     // The accuracy of nrActivePlanes is vital for the script.
     void Update()
     {
+        
         nrActivePlanes = 0;
-        foreach (ARPlane plane in ARPlaneManager.trackables)
+        foreach (ARPlane plane in arPlaneManager.trackables)
         {
             if (plane.gameObject.activeSelf && plane.trackingState == TrackingState.Tracking)
             {
@@ -72,7 +74,7 @@ public class PlaneControl : MonoBehaviour
         foreach (TrackableId key in keysToProcess)
         {
 
-            if (ARPlaneManager.trackables.TryGetTrackable(key, out output))
+            if (arPlaneManager.trackables.TryGetTrackable(key, out output))
             {
                 if (output.subsumedBy != null)
                 {
@@ -88,14 +90,15 @@ public class PlaneControl : MonoBehaviour
                 }
             }
         }
+        
 
-        Vector2 screenCenter = new Vector2(ARCamera.pixelWidth / 2, ARCamera.pixelHeight / 2);
+        Vector2 screenCenter = new Vector2(arCamera.pixelWidth / 2, arCamera.pixelHeight / 2);
 
         raycastHits.Clear();
         //buttonText.text = "Inainte de Raycast";
-        if (ARRaycastManager.Raycast(screenCenter, raycastHits, TrackableType.Planes))
+        if (arRaycastManager.Raycast(screenCenter, raycastHits, TrackableType.Planes))
         {
-            // buttonText.text = "Dupa Raycast
+          //  buttonText.text = "Dupa Raycast";
             RestorePlane(raycastHits);
             OverlappedPlanes(raycastHits);
         }
@@ -110,15 +113,15 @@ public class PlaneControl : MonoBehaviour
 
         if (nrActivePlanes > 3)
         {
-            ARPlaneManager.enabled = false;
+            arPlaneManager.enabled = false;
         }
         else
         {
-            ARPlaneManager.enabled = true;
+            arPlaneManager.enabled = true;
         }
 
         int finalPlaneCount = 0;
-        foreach (ARPlane plane in ARPlaneManager.trackables)
+        foreach (ARPlane plane in arPlaneManager.trackables)
         {
             if (plane.gameObject.activeSelf && plane.trackingState == TrackingState.Tracking)
             {
@@ -126,7 +129,7 @@ public class PlaneControl : MonoBehaviour
             }
         }
 
-        //buttonText.text = ARPlaneManager.isActiveAndEnabled.ToString() + " " + nrActivePlanes.ToString() + " " + finalPlaneCount.ToString();
+        debugText.SetText(arPlaneManager.isActiveAndEnabled.ToString() + " " + nrActivePlanes.ToString() + " " + finalPlaneCount.ToString());
 
     }
 
@@ -139,7 +142,7 @@ public class PlaneControl : MonoBehaviour
 
         foreach (ARRaycastHit hit in raycastHits)
         {
-            var plane = ARPlaneManager.GetPlane(hit.trackableId);
+            var plane = arPlaneManager.GetPlane(hit.trackableId);
             if (plane.gameObject.activeSelf)
             {
                 noActivePlanes = false;
@@ -149,11 +152,26 @@ public class PlaneControl : MonoBehaviour
 
         if (noActivePlanes && raycastHits.Count > 0)
         {
-            var plane = ARPlaneManager.GetPlane(raycastHits[raycastHits.Count - 1].trackableId);
-            plane.gameObject.SetActive(true);
-            if (disabledPlanes.Contains(plane))
+            ARPlane biggestPlane = arPlaneManager.GetPlane(raycastHits[0].trackableId);
+            float biggestPlaneSize = biggestPlane.size[0] * biggestPlane.size[1];
+
+            foreach(ARRaycastHit hit in raycastHits)
             {
-                disabledPlanes.Remove(plane);
+                ARPlane plane = arPlaneManager.GetPlane(hit.trackableId);
+                float planeSize = plane.size[0] * plane.size[1];
+
+                if (plane.size[0] * plane.size[1] >= biggestPlaneSize)
+                {
+                    biggestPlane = plane;
+                    biggestPlaneSize = planeSize;
+                }
+
+            }
+
+            biggestPlane.gameObject.SetActive(true);
+            if (disabledPlanes.Contains(biggestPlane))
+            {
+                disabledPlanes.Remove(biggestPlane);
             }
         }
     }
@@ -165,9 +183,6 @@ public class PlaneControl : MonoBehaviour
 
     private void OverlappedPlanes(List<ARRaycastHit> raycastHits)
     {
-        //float overlapMaxDistance = 0.5f;
-
-
         if (raycastHits.Count > 1)
         {
             List<ARPlane> verticalPlanes = new List<ARPlane>();
@@ -175,7 +190,7 @@ public class PlaneControl : MonoBehaviour
 
             for (int i = 0; i < raycastHits.Count; i++)
             {
-                var plane = ARPlaneManager.GetPlane(raycastHits[i].trackableId);
+                var plane = arPlaneManager.GetPlane(raycastHits[i].trackableId);
                 if (PlaneAlignmentExtensions.IsVertical(plane.alignment))
                 {
                     verticalPlanes.Add(plane);
@@ -201,41 +216,37 @@ public class PlaneControl : MonoBehaviour
         if (Planes.Count > 1)
         {
             ARPlane biggestPlane = Planes[0];
-            Vector2 biggestPlaneSize = Planes[0].size;
+            float biggestPlaneSize = Planes[0].size[0] * Planes[0].size[1];
 
             for (int i = 1; i < Planes.Count; i++)
             {
                 var plane = Planes[i];
+                float planeSize = plane.size[0] * plane.size[1];
 
                 if (plane.gameObject.activeSelf)
-                {
-                    if (plane.size[0] >= biggestPlaneSize[0] && plane.size[1] >= biggestPlaneSize[1])
-                    {
-                        if (biggestPlane.subsumedBy != null)
-                        {
-                            mergedPlanes.Remove(biggestPlane.subsumedBy.trackableId);
-                        }
-                        biggestPlane.gameObject.SetActive(false);
-                        disabledPlanes.Add(plane);
+                {               
+                    if(planeSize >= biggestPlaneSize)
+                    {                    
                         biggestPlane = plane;
-                        biggestPlaneSize = plane.size;
-                    }
-                    else
-                    {
-                        if (plane.subsumedBy != null)
-                        {
-                            mergedPlanes.Remove(plane.subsumedBy.trackableId);
-                        }
-
-                        plane.gameObject.SetActive(false);
-                        disabledPlanes.Add(plane);
-
-                    }
+                        biggestPlaneSize = planeSize;
+                    }                  
                 }
 
             }
 
+            Planes.Remove(biggestPlane);
 
+            foreach(var plane in Planes)
+            {
+                if (plane.subsumedBy != null)
+                {
+                    mergedPlanes.Remove(plane.subsumedBy.trackableId);
+                }
+
+                plane.gameObject.SetActive(false);
+                disabledPlanes.Add(plane);
+
+            }
         }
     }
 
@@ -247,7 +258,7 @@ public class PlaneControl : MonoBehaviour
         List<ARPlane> copyList = new List<ARPlane>(disabledPlanes);
         foreach (ARPlane plane in copyList)
         {
-            if (!ARPlaneManager.trackables.TryGetTrackable(plane.trackableId, out output))
+            if (!arPlaneManager.trackables.TryGetTrackable(plane.trackableId, out output))
             {
                 disabledPlanes.Remove(plane);
 
