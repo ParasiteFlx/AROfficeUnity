@@ -43,28 +43,29 @@ public class PlaneSelection : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            if (previousPlane != null && previousPlane.gameObject.activeSelf == true && hit.collider.gameObject.CompareTag("ARPlane"))
+            if (hit.collider.gameObject.CompareTag("ARPlane"))
             {
-                previousPlane.GetComponent<LineRenderer>().startWidth = 0.005f;
-                previousPlane.GetComponent<LineRenderer>().endWidth = 0.005f;
-            }
+                if (previousPlane != null && previousPlane.gameObject.activeSelf == true)
+                {
+                    previousPlane.GetComponent<LineRenderer>().startWidth = 0.005f;
+                    previousPlane.GetComponent<LineRenderer>().endWidth = 0.005f;
+                }
 
 
-            if(selectedPlane !=null && hit.collider.gameObject.Equals(selectedPlane))
-            {
-                selectedPlane.GetComponent<LineRenderer>().startWidth = 0.005f;
-                selectedPlane.GetComponent<LineRenderer>().endWidth = 0.005f;
-                selectedPlane = null;
+                if (selectedPlane != null && hit.collider.gameObject.Equals(selectedPlane))
+                {
+                    selectedPlane.GetComponent<LineRenderer>().startWidth = 0.005f;
+                    selectedPlane.GetComponent<LineRenderer>().endWidth = 0.005f;
+                    selectedPlane = null;
+                }
+                else
+                {
+                    selectedPlane = hit.collider.gameObject;
+                    selectedPlane.GetComponent<LineRenderer>().startWidth = 0.03f;
+                    selectedPlane.GetComponent<LineRenderer>().endWidth = 0.03f;
+                    previousPlane = selectedPlane;
+                }
             }
-            else
-            {
-                selectedPlane = hit.collider.gameObject;
-                selectedPlane.GetComponent<LineRenderer>().startWidth = 0.03f;
-                selectedPlane.GetComponent<LineRenderer>().endWidth = 0.03f;
-                previousPlane = selectedPlane;
-            }
-      
         }
     }
 }
-
