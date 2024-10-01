@@ -8,6 +8,7 @@ TagManager:
   - origin
   - button
   - ARPlane
+  - arSession
   layers:
   - Default
   - TransparentFX

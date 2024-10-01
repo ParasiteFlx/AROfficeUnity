@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 702413257}
   m_Layer: 0
   m_Name: AR Session
-  m_TagString: Untagged
+  m_TagString: arSession
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1611,6 +1611,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6f3173a3f8600408a10446fa796b25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noTransitions: 0
+  simplifiedTransitions: 1
+  complexTransitions: 0
 --- !u!1 &1528921431
 GameObject:
   m_ObjectHideFlags: 0
@@ -2956,7 +2959,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8469494145858465668, guid: b502c3427312a3f4cbd3eb247dcd0a2e, type: 3}
+  - {fileID: 2100000, guid: d7863a6a499121446b38abe707e3ac9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3177,7 +3180,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8469494145858465668, guid: b502c3427312a3f4cbd3eb247dcd0a2e, type: 3}
+  - {fileID: 2100000, guid: d7863a6a499121446b38abe707e3ac9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3231,7 +3234,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8469494145858465668, guid: b502c3427312a3f4cbd3eb247dcd0a2e, type: 3}
+  - {fileID: 2100000, guid: d7863a6a499121446b38abe707e3ac9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
