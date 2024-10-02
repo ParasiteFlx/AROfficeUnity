@@ -11,7 +11,6 @@ public class NoTransition : MonoBehaviour
     private bool simplifiedTransitions;
     [SerializeField]
     private bool complexTransitions;
-    //private ARSession arSession;
     private ARAnchorManager arAnchorManager;
     private List<GameObject> mainMenuButtons = new List<GameObject>();
 
@@ -45,12 +44,11 @@ public class NoTransition : MonoBehaviour
             }
             else if (simplifiedTransitions)
             {
-
                 StartCoroutine(SimplifiedTransitions(mainMenuButtons));
             }
             else if (complexTransitions)
             {
-
+                StartCoroutine(ComplexTransitions(mainMenuButtons));
             }
         }
 
@@ -98,6 +96,39 @@ public class NoTransition : MonoBehaviour
 
            
         }
+    }
+
+    private IEnumerator ComplexTransitions(List<GameObject> buttons)
+    {
+        Vector3 cameraPosition = Camera.main.transform.position;
+
+        for(int i = 0 ; i < buttons.Count; i++ )
+        {
+            int rotationSpeed = 5;
+            buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 180);
+            buttons[i].SetActive(true);
+            if(i % 2 != 0)
+            {
+                for (int j = 1; j <= 36; j++)
+                {
+                    buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), rotationSpeed);
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
+            else
+            {
+                rotationSpeed = -5;
+                
+                for (int j = 1; j <= 36; j++)
+                {
+                    buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), rotationSpeed);
+                    yield return new WaitForSeconds(0.1f);
+                }
+
+            }
+         
+       
+        }        
     }
 
 }
