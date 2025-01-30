@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using System.Collections;
+using Unity.Mathematics;
+using UnityEditor;
+using System;
+using static UnityEngine.Rendering.DebugUI;
 
 public class NoTransition : MonoBehaviour
 {
@@ -16,27 +20,27 @@ public class NoTransition : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {   
+    {
         //arSession = GameObject.FindGameObjectWithTag("arSession").GetComponent<ARSession>();
         arAnchorManager = GameObject.FindGameObjectWithTag("origin").GetComponent<ARAnchorManager>();
-        
+
         // Gets the immediate children's transform from the parents' Transform component
-        foreach(Transform button in transform)
+        foreach (Transform button in transform)
         {
             mainMenuButtons.Add(button.gameObject);
         }
 
         //hooking/subscribing to the stateChanged Event to check if the ARSession is Tracking. If I dont do this, the buttons show up before everything sets up.
         ARSession.stateChanged += ARSession_stateChanged;
-        
+
     }
 
     private void ARSession_stateChanged(ARSessionStateChangedEventArgs obj)
     {
         if (ARSession.state.Equals(ARSessionState.SessionTracking))
-        {   
+        {
             //unhooking because I need it once.
-            ARSession.stateChanged-= ARSession_stateChanged;
+            ARSession.stateChanged -= ARSession_stateChanged;
 
             if (noTransitions)
             {
@@ -56,29 +60,29 @@ public class NoTransition : MonoBehaviour
 
     private void NoTransitions(List<GameObject> buttons)
     {
-        foreach(GameObject button in buttons)
+        foreach (GameObject button in buttons)
         {
             button.SetActive(true);
-            ARAnchor anchor = button.GetComponent<ARAnchor>();            
-            if(anchor == null)
-            { 
-               button.AddComponent<ARAnchor>();              
+            ARAnchor anchor = button.GetComponent<ARAnchor>();
+            if (anchor == null)
+            {
+                button.AddComponent<ARAnchor>();
             }
         }
     }
 
     private IEnumerator SimplifiedTransitions(List<GameObject> buttons)
     {
-        foreach(GameObject button in buttons)
+        foreach (GameObject button in buttons)
         {
             MeshRenderer buttonMeshRenderer = button.GetComponent<MeshRenderer>();
             Color buttonColor = buttonMeshRenderer.material.color;
 
             buttonColor.a = 0f;
 
-            button.SetActive(true);       
+            button.SetActive(true);
 
-            for(float i = 0f; i <= 1f; i+=0.1f)
+            for (float i = 0f; i <= 1f; i += 0.1f)
             {
                 buttonColor.a = i;
                 buttonMeshRenderer.material.color = buttonColor;
@@ -94,41 +98,59 @@ public class NoTransition : MonoBehaviour
                 button.AddComponent<ARAnchor>();
             }
 
-           
+
         }
     }
 
     private IEnumerator ComplexTransitions(List<GameObject> buttons)
     {
-        Vector3 cameraPosition = Camera.main.transform.position;
+        Transform camera = Camera.main.transform;
 
-        for(int i = 0 ; i < buttons.Count; i++ )
-        {
-            int rotationSpeed = 5;
+        Vector3 cameraPosition = camera.position;
+
+        for (int i = 0; i < buttons.Count; i++) {
+
+            Transform initialButtonTransform  = buttons[i].transform;
             buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 180);
             buttons[i].SetActive(true);
-            if(i % 2 != 0)
+            float j = 0;
+            if (i % 2 != 0)
             {
-                for (int j = 1; j <= 36; j++)
+                while (j > -180)
                 {
-                    buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), rotationSpeed);
-                    yield return new WaitForSeconds(0.1f);
+                    Vector3 relativePosition = cameraPosition - buttons[i].transform.position;
+                    relativePosition.y = 0;
+                    Quaternion rotation = Quaternion.LookRotation(relativePosition);
+                    Quaternion current = buttons[i].transform.rotation;
+                    buttons[i].transform.rotation = Quaternion.Slerp(current, rotation, Time.deltaTime);
+                    buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), - 1f);
+                    j -= 1f;
+                    yield return null;
                 }
             }
             else
             {
-                rotationSpeed = -5;
-                
-                for (int j = 1; j <= 36; j++)
+                while (j < 180)
                 {
-                    buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), rotationSpeed);
-                    yield return new WaitForSeconds(0.1f);
+                    Vector3 relativePosition = cameraPosition - buttons[i].transform.position;
+                    relativePosition.y = 0;
+                    Quaternion rotation = Quaternion.LookRotation(relativePosition,Vector3.up);
+                    Quaternion current = buttons[i].transform.localRotation;
+                    buttons[i].transform.rotation = Quaternion.Slerp(current, rotation, Time.deltaTime);
+                    buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 1f);
+                    j += 1f;
+                    yield return null;
                 }
-
             }
-         
-       
-        }        
+
+            buttons[i].transform.position = initialButtonTransform.position;
+            buttons[i].transform.rotation = initialButtonTransform.rotation;
+
+
+        }
+
+
+
     }
 
 }
