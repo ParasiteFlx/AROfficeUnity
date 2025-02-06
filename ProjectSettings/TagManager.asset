@@ -9,6 +9,9 @@ TagManager:
   - button
   - ARPlane
   - arSession
+  - play
+  - options
+  - credits
   layers:
   - Default
   - TransparentFX

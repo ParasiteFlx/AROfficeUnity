@@ -1611,9 +1611,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6f3173a3f8600408a10446fa796b25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noTransitions: 0
-  simplifiedTransitions: 0
-  complexTransitions: 1
+  transitionType: 2
+  mainMenuButtons: []
 --- !u!1 &1528921431
 GameObject:
   m_ObjectHideFlags: 0
@@ -2576,6 +2575,8 @@ GameObject:
   - component: {fileID: 1845542518}
   - component: {fileID: 1845542519}
   - component: {fileID: 1845542523}
+  - component: {fileID: 1845542525}
+  - component: {fileID: 1845542524}
   m_Layer: 0
   m_Name: XR Origin (XR Rig)
   m_TagString: origin
@@ -2722,6 +2723,94 @@ MonoBehaviour:
   recordFingers: 1
   recordThreshold: 5
   recordLimit: 10
+--- !u!114 &1845542524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845542512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 479d695282ba6cf4ba3ab3c4848f05e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deselectWithNothing: 0
+  limit: 0
+  maxSelectables: 5
+  reselect: 3
+  selectables: []
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  onNothing:
+    m_PersistentCalls:
+      m_Calls: []
+  ScreenQuery:
+    Method: 0
+    Layers:
+      serializedVersion: 2
+      m_Bits: 4294967291
+    Search: 1
+    RequiredTag: 
+    Camera: {fileID: 917618961}
+    Distance: 50
+  deselectWithFingers: 0
+  onSelectedFinger:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1845542525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845542512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7c1c71d8ad5da9438de3b2e5990763f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreStartedOverGui: 1
+  ignoreIsOverGui: 0
+  requiredSelectable: {fileID: 0}
+  requiredTapCount: 0
+  requiredTapInterval: 0
+  onFinger:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1845542524}
+        m_TargetAssemblyTypeName: Lean.Touch.LeanSelectByFinger, LeanTouch
+        m_MethodName: SelectScreenPosition
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onCount:
+    m_PersistentCalls:
+      m_Calls: []
+  ScreenDepth:
+    Conversion: 1
+    Camera: {fileID: 0}
+    Object: {fileID: 0}
+    Layers:
+      serializedVersion: 2
+      m_Bits: 4294967291
+    Distance: 0
+  onWorld:
+    m_PersistentCalls:
+      m_Calls: []
+  onScreen:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1896518234
 GameObject:
   m_ObjectHideFlags: 0
@@ -2820,9 +2909,10 @@ GameObject:
   - component: {fileID: 8593864946931718232}
   - component: {fileID: 3728229629029933719}
   - component: {fileID: 8593864946931718233}
+  - component: {fileID: 8593864946931718234}
   m_Layer: 0
   m_Name: Options
-  m_TagString: button
+  m_TagString: options
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2840,9 +2930,10 @@ GameObject:
   - component: {fileID: 8593864948281436831}
   - component: {fileID: 3728229629293449296}
   - component: {fileID: 8593864948281436832}
+  - component: {fileID: 8593864948281436833}
   m_Layer: 0
   m_Name: Credits
-  m_TagString: button
+  m_TagString: credits
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3214,6 +3305,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53d07c54ebaf0fd428ddedfdb5a64bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8593864946931718234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154945294166972093}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31bcdb60110816a4a90149485270f40d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &8593864948281436831
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3268,6 +3371,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53d07c54ebaf0fd428ddedfdb5a64bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8593864948281436833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154945294432068730}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e11afd991713874b9493aad6095a2c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8634507885769241213
 GameObject:
   m_ObjectHideFlags: 0
@@ -3281,9 +3396,10 @@ GameObject:
   - component: {fileID: 1195517888686636184}
   - component: {fileID: 477184872482076664}
   - component: {fileID: 8634507885769241214}
+  - component: {fileID: 8634507885769241215}
   m_Layer: 0
   m_Name: Play
-  m_TagString: button
+  m_TagString: play
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3298,6 +3414,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53d07c54ebaf0fd428ddedfdb5a64bca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8634507885769241215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8634507885769241213}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69fa42afd3022c04081912c26cc9c9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
