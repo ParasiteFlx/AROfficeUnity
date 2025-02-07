@@ -160,7 +160,7 @@ public class Transitions : MonoBehaviour
                 buttons[i].SetActive(true);
                 float targetAngle = (i % 2 != 0) ? -180f : 180f;
                 float currentAngle = 0f;
-                float step = targetAngle > 0 ? 1f : -1f;
+                float step = targetAngle > 0 ? 3f : -3f;
 
                 while (Mathf.Abs(currentAngle) < Mathf.Abs(targetAngle))
                 {
@@ -186,7 +186,7 @@ public class Transitions : MonoBehaviour
                 float targetAngle = (i % 2 != 0) ? -180f : 180f;
                 float currentAngle = 0f;
              
-                float step = targetAngle > 0 ? 1f : -1f;
+                float step = targetAngle > 0 ? 3f : -3f;
 
                 while (Mathf.Abs(currentAngle) < Mathf.Abs(targetAngle))
                 {
@@ -210,21 +210,21 @@ public class Transitions : MonoBehaviour
         // false = comes from the right/goes to the left in front of the camera;
         if (direction)
         {
-           // Vector3 relativePosition = cameraPosition - button.transform.position;
-           // relativePosition.y = 0;
-           // Quaternion rotation = Quaternion.LookRotation(relativePosition, Vector3.up);
-           // Quaternion current = button.transform.rotation;
-            //button.transform.rotation = Quaternion.Slerp(current, rotation, Time.deltaTime);
-            button.transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), -1f);
+            Vector3 relativePosition = cameraPosition - button.transform.position;
+            relativePosition.y = 0;
+            Quaternion rotation = Quaternion.LookRotation(relativePosition, Vector3.up);
+            Quaternion current = button.transform.rotation;
+            button.transform.rotation = Quaternion.Slerp(current, rotation, Time.deltaTime);
+            button.transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), -3f);
         }
         else
         {
-            //Vector3 relativePosition = cameraPosition - button.transform.position;
-           // relativePosition.y = 0;
-           // Quaternion rotation = Quaternion.LookRotation(relativePosition, Vector3.up);
-           // Quaternion current = button.transform.rotation;
-            //button.transform.rotation = Quaternion.Slerp(current, rotation, Time.deltaTime);
-            button.transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 1f);
+            Vector3 relativePosition = cameraPosition - button.transform.position;
+            relativePosition.y = 0;
+            Quaternion rotation = Quaternion.LookRotation(relativePosition, Vector3.up);
+            Quaternion current = button.transform.rotation;
+            button.transform.rotation = Quaternion.Slerp(current, rotation, Time.deltaTime);
+            button.transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 3f);
         }
        
     }
