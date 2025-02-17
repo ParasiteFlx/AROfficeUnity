@@ -24,27 +24,50 @@ public class ButtonPress : MonoBehaviour
 
         if(Physics.Raycast(ray, out hit))
         {
-            GameObject objectHit = hit.collider.gameObject;
-
-            //Dau Enable la un script separat deoarece cand ma foloseam doar de ButtonPress event-ul OnFingerTap avea atatea subscribtii cate butoane aveau scriptul activ.
-            if(objectHit.CompareTag("play"))
+            GameObject objectHit = hit.collider.gameObject;        
+            if(objectHit == gameObject)
             {
-                objectHit.GetComponent<PlayButton>().enabled = true;
-                Debug.Log(objectHit.tag);
+                TextMeshPro buttonText = objectHit.GetComponentInChildren<TextMeshPro>();
+               
+                //Dau Enable la un script separat deoarece cand ma foloseam doar de ButtonPress event-ul OnFingerTap avea atatea subscribtii cate butoane aveau scriptul activ.
+                if (buttonText != null)
+                {
+                    objectHit.GetComponent<MainMenuOut>().enabled = true;
+                    if (buttonText.text.Equals("Play"))
+                    {
 
-            }
-            else if(objectHit.CompareTag("options"))
-            {
-                objectHit.GetComponent<OptionsButton>().enabled = true;
-                Debug.Log(objectHit.tag);
 
-            }
-            else if(objectHit.CompareTag("credits"))
-            {
-                objectHit.GetComponent<CreditsButton>().enabled = true;
-                Debug.Log(objectHit.tag);
 
+                    }
+                    else if (buttonText.text.Equals("Options"))
+                    {
+
+                        GameObject optionsMenu = GameObject.FindGameObjectWithTag("options");
+                        optionsMenu.GetComponent<OptionsMenu>().enabled = true;
+
+                    }
+                    else if (buttonText.text.Equals("Credits"))
+                    {
+
+
+                    }
+                }
+                else
+                {              
+                    if (objectHit.CompareTag("upArrow"))
+                    {
+                        Transitions.Instance().UpDownArrowsChangeOption(objectHit.transform,objectHit.gameObject.tag.ToString());
+                      
+                    }
+                    else if (objectHit.CompareTag("downArrow"))
+                    {
+
+                        Transitions.Instance().UpDownArrowsChangeOption(objectHit.transform, objectHit.gameObject.tag.ToString());
+                    }
+                }
             }
+          
+
         }
 
     }

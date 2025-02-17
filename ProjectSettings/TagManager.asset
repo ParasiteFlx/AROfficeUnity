@@ -12,6 +12,8 @@ TagManager:
   - play
   - options
   - credits
+  - upArrow
+  - downArrow
   layers:
   - Default
   - TransparentFX
