@@ -17,6 +17,7 @@ public class Transitions : MonoBehaviour
     public List<GameObject> mainMenuButtons = new List<GameObject>();
     private static Transitions instance;
     
+    
 
     private void Awake()
     {
@@ -96,27 +97,30 @@ public class Transitions : MonoBehaviour
         if (!reverse)
         {
             foreach (GameObject button in buttons)
-            {  
-                MeshRenderer buttonMeshRenderer = button.GetComponent<MeshRenderer>(); 
-                if(buttonMeshRenderer == null)
-                { 
-                }
-                ToFadeMode(buttonMeshRenderer.material);
-                Color buttonColor = buttonMeshRenderer.material.color;
-                buttonColor.a = 0f;
-
-                button.SetActive(true);
-
-                for (float i = 0f; i <= 1f; i += 0.1f)
+            {
+                
+                if (button.transform.childCount > 1)
                 {
-                    buttonColor.a = i;
-                    buttonMeshRenderer.material.color = buttonColor;
-                    yield return new WaitForSeconds(0.05f);
-                }
+                    button.SetActive(true);            
+                    List<Coroutine> fadeIns = new List<Coroutine>();
+                    foreach (Transform child in button.transform)
+                    {
+                        fadeIns.Add(StartCoroutine(FadeIn(child.gameObject)));
+                        
+                    }
 
-                buttonColor.a = 1f;
-                buttonMeshRenderer.material.color = buttonColor;
-                ToOpaqueMode(buttonMeshRenderer.material);
+                    foreach (Coroutine coroutine in fadeIns)
+                    { 
+                     
+                        yield return coroutine;
+                    
+                    }
+                }
+                else
+                {
+                    yield return FadeIn(button);
+                }
+              
                 ARAnchor anchor = button.GetComponent<ARAnchor>();
 
                 if (anchor == null)
@@ -130,37 +134,87 @@ public class Transitions : MonoBehaviour
         {
             for (int i = mainMenuButtons.Count - 1; i >= 0; i--)
             {
-                MeshRenderer buttonMeshRenderer = mainMenuButtons[i].GetComponent<MeshRenderer>();
-                ToFadeMode(buttonMeshRenderer.material);
-                Color buttonColor = buttonMeshRenderer.material.color;
+                if (mainMenuButtons[i].transform.childCount > 1)
+                {   
+                   List<Coroutine> fadeouts = new List<Coroutine>();
+                    foreach (Transform child in mainMenuButtons[i].transform)
+                    {
+                        fadeouts.Add(StartCoroutine(FadeOut(child.gameObject)));                    
+                    }
 
-                for (float j = 1f; j >= 0f; j -= 0.1f)
-                {
-                    buttonColor.a = j;
-                    buttonMeshRenderer.material.color = buttonColor;
-                    yield return new WaitForSeconds(0.05f);
+                    foreach(Coroutine coroutine in fadeouts)
+                    {
+                        yield return coroutine;               
+                    }
                 }
-                buttonColor.a = 0f;
-                buttonMeshRenderer.material.color = buttonColor;
-                ToOpaqueMode(buttonMeshRenderer.material);
-                mainMenuButtons[i].SetActive(false);
-
+                else
+                {
+                    yield return FadeOut(mainMenuButtons[i]);
+                }
+                
                 ARAnchor anchor = mainMenuButtons[i].GetComponent<ARAnchor>();
                 if (anchor == null)
                 {
                     mainMenuButtons[i].AddComponent<ARAnchor>();
                 }
+
+                mainMenuButtons[i].SetActive(false);
             }
         }
     }
 
-    private void FadeIn(GameObject button)
-    {
+    private IEnumerator FadeIn(GameObject button)
+    {      
+        MeshRenderer buttonMeshRenderer = button.GetComponent<MeshRenderer>();
 
+        if (buttonMeshRenderer!=null)
+        {        
+                   
+            Color buttonColor = buttonMeshRenderer.material.color;
+            buttonColor.a = 0f;
+
+            button.SetActive(true);
+
+            for (float i = 0f; i <= 1f; i += 0.1f)
+            {
+                buttonColor.a = i;
+                buttonMeshRenderer.material.color = buttonColor;
+                yield return new WaitForSeconds(0.05f);
+            }
+
+            buttonColor.a = 1f;
+            buttonMeshRenderer.material.color = buttonColor;
+
+            //ToOpaqueMode(buttonMeshRenderer.material);
+        }
+       
     }
 
-    //The next two functions were taken from: https://discussions.unity.com/t/change-rendering-mode-via-script/667727/3 . These functions just do what
-    //happens behind the scenes when you change the RenderingMode of a material from the Inspector.
+    private IEnumerator FadeOut(GameObject button) 
+    {   
+        MeshRenderer buttonMeshRenderer = button.GetComponent<MeshRenderer>();
+        if (buttonMeshRenderer != null)
+        {
+            //ToFadeMode(buttonMeshRenderer.material);
+          
+            Color buttonColor = buttonMeshRenderer.material.color;
+
+            for (float j = 1f; j >= 0f; j -= 0.1f)
+            {
+                buttonColor.a = j;
+                buttonMeshRenderer.material.color = buttonColor;
+                yield return new WaitForSeconds(0.05f);
+            }
+            buttonColor.a = 0f;
+            buttonMeshRenderer.material.color = buttonColor;
+          
+            button.SetActive(false);
+        }
+       
+    }
+
+    //Those two functions are from: https://discussions.unity.com/t/change-rendering-mode-via-script/667727/3 
+    //Those basically do what happens behind the scenes when you change RenderMode on a material from the Inspector.
     private void ToOpaqueMode(Material material)
     {
         material.SetOverrideTag("RenderType", "");
