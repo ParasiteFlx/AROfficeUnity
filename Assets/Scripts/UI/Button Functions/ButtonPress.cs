@@ -53,16 +53,19 @@ public class ButtonPress : MonoBehaviour
                     }
                 }
                 else
-                {              
-                    if (objectHit.CompareTag("upArrow"))
+                {          
+                   
+                    if (objectHit.CompareTag("leftArrow"))
                     {
-                        Transitions.Instance().UpDownArrowsChangeOption(objectHit.transform,objectHit.gameObject.tag.ToString());
+                        Options.Instance().SetTransitionType(false);
+                        Transitions.Instance().LeftRightArrowsChangeOption(objectHit.transform,objectHit.gameObject.tag.ToString());
                       
                     }
-                    else if (objectHit.CompareTag("downArrow"))
+                    else if (objectHit.CompareTag("rightArrow"))
                     {
+                        Options.Instance().SetTransitionType(true);
+                        Transitions.Instance().LeftRightArrowsChangeOption(objectHit.transform, objectHit.gameObject.tag.ToString());
 
-                        Transitions.Instance().UpDownArrowsChangeOption(objectHit.transform, objectHit.gameObject.tag.ToString());
                     }
                 }
             }

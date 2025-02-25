@@ -6,14 +6,14 @@ TagManager:
   tags:
   - debug
   - origin
-  - button
   - ARPlane
   - arSession
   - play
   - options
   - credits
-  - upArrow
-  - downArrow
+  - leftArrow
+  - rightArrow
+  - buttonName
   layers:
   - Default
   - TransparentFX

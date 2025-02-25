@@ -4,21 +4,15 @@ using UnityEngine.XR.ARFoundation;
 using System.Collections;
 using System;
 using Unity.VisualScripting;
+using System.Runtime.Serialization.Json;
+using TMPro;
 
 public class Transitions : MonoBehaviour
 {
-    // 0 = noTransitions;
-    // 1 = simplifiedTransitions:
-    // 2 = complexTransitions;
-
-    [SerializeField]
-    private int transitionType;
     private ARAnchorManager arAnchorManager;
     public List<GameObject> mainMenuButtons = new List<GameObject>();
     private static Transitions instance;
     
-    
-
     private void Awake()
     {
         if (instance == null)
@@ -42,6 +36,7 @@ public class Transitions : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+      
         //arSession = GameObject.FindGameObjectWithTag("arSession").GetComponent<ARSession>();
         arAnchorManager = GameObject.FindGameObjectWithTag("origin").GetComponent<ARAnchorManager>();
 
@@ -65,11 +60,6 @@ public class Transitions : MonoBehaviour
             ARSession.stateChanged -= ARSession_stateChanged;
             TransitionStarter(mainMenuButtons);
         }
-    }
-
-    public int GetTransitionType()
-    {
-        return transitionType;
     }
 
     public void NoTransitions(List<GameObject> buttons, bool reverse = false)
@@ -324,7 +314,8 @@ public class Transitions : MonoBehaviour
 
     public void TransitionStarter(List<GameObject> buttons, bool reverse = false)
     {
-      
+        int transitionType = Options.Instance().GetTransitionType();
+
         if (transitionType == 2)
         {
             StartCoroutine(Transitions.Instance().ComplexTransitions(buttons, reverse));
@@ -344,24 +335,55 @@ public class Transitions : MonoBehaviour
       
     }
 
-    public IEnumerator upDownArrowsTransition(Transform buttonBody, string direction)
+    private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string direction)
     {
-        float angle=0;     
-        if (direction.Equals("upArrow"))
+        int transitionType = Options.Instance().GetTransitionType();
+        float angle=0;
+        GameObject buttonName = null;
+
+
+        foreach(Transform child in buttonBody)
+        {
+            if (child.CompareTag("buttonName"))
+            {
+                buttonName = child.gameObject;
+            }
+        }
+
+        Vector3 buttonNamePosition = buttonName.transform.position;
+
+        string[] buttonTexts = { "None", "Simple", "Complex" };
+        List<string> buttonTextList = new List<string>();
+
+        if (direction.Equals("leftArrow"))
         {   
             while(angle!=360)
             {
-                buttonBody.transform.Rotate(new Vector3(1,0,0),Space.Self);
+                buttonBody.transform.Rotate(new Vector3(0,1,0),Space.Self);
+                buttonName.transform.Rotate(new Vector3(0,-1,0),Space.World);
+                buttonName.transform.position = buttonNamePosition;
+                if (angle == 180)
+                {
+                     buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = buttonTexts[transitionType];
+
+                }
                 yield return null;
                 angle++;
             }
            
         }
-        else if (direction.Equals("downArrow"))
+        else if (direction.Equals("rightArrow"))
         {
             while (angle != -360)
             {
-                buttonBody.transform.Rotate(new Vector3(-1, 0, 0), Space.Self);
+                buttonBody.transform.Rotate(new Vector3(0, -1, 0), Space.Self);
+                buttonName.transform.Rotate(new Vector3(0, 1, 0), Space.World);
+                buttonName.transform.position = buttonNamePosition;
+                if (angle == -180)
+                {
+                    buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = buttonTexts[transitionType];
+
+                }
                 yield return null;
                 angle--;
             }
@@ -370,7 +392,7 @@ public class Transitions : MonoBehaviour
        
     }
 
-    public void UpDownArrowsChangeOption(Transform arrow, string direction)
+    public void LeftRightArrowsChangeOption(Transform arrow, string direction)
     {
         Transform buttonBody = null;
         Transform parentObjectTransform = arrow.parent;
@@ -379,10 +401,14 @@ public class Transitions : MonoBehaviour
         {
             if (child.childCount != 0)
             {
-                buttonBody = child;
+                buttonBody = child;          
             }
         }
-        if (buttonBody != null) { StartCoroutine(Transitions.Instance().upDownArrowsTransition(buttonBody, direction)); }
+
+        if (buttonBody != null) 
+        { 
+            StartCoroutine(Transitions.Instance().LeftRightArrowsTransition(buttonBody, direction)); 
+        }
     }
 
     public void Repositioning(int transitionType)
