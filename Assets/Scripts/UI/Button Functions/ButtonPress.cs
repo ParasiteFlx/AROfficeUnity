@@ -58,14 +58,14 @@ public class ButtonPress : MonoBehaviour
                     if (objectHit.CompareTag("leftArrow"))
                     {
                         Options.Instance().SetTransitionType(false);
-                        Transitions.Instance().LeftRightArrowsChangeOption(objectHit.transform,objectHit.gameObject.tag.ToString());
-                      
+                        Transitions.Instance().LeftRightArrowsChangeOption(objectHit.transform,objectHit.gameObject.tag.ToString());                     
+                        Transitions.Instance().optionsIsRotating = true; 
                     }
                     else if (objectHit.CompareTag("rightArrow"))
                     {
                         Options.Instance().SetTransitionType(true);
                         Transitions.Instance().LeftRightArrowsChangeOption(objectHit.transform, objectHit.gameObject.tag.ToString());
-
+                        Transitions.Instance().optionsIsRotating = true;
                     }
                 }
             }

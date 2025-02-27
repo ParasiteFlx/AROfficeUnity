@@ -2425,6 +2425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuButtons: []
+  optionsIsRotating: 0
 --- !u!1 &1528921431
 GameObject:
   m_ObjectHideFlags: 0
@@ -4045,8 +4046,8 @@ GameObject:
   - component: {fileID: 3881214226730219992}
   - component: {fileID: 2093039795546636434}
   - component: {fileID: 3183555361230775302}
-  - component: {fileID: 5434429373638535909}
   - component: {fileID: 5434429373638535908}
+  - component: {fileID: 5434429373638535909}
   m_Layer: 0
   m_Name: Left
   m_TagString: leftArrow
@@ -4066,8 +4067,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53d07c54ebaf0fd428ddedfdb5a64bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!64 &5434429373638535909
-MeshCollider:
+--- !u!65 &5434429373638535909
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4084,10 +4085,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2432090755550338912, guid: cf8a0eaf83359a4418de9a87bc903e3c, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.7000002, y: 0.7000002, z: 0.100000046}
+  m_Center: {x: 0.049999963, y: 0.20000014, z: 0.050000977}
 --- !u!1 &8151664789906546413
 GameObject:
   m_ObjectHideFlags: 0
@@ -4099,8 +4099,8 @@ GameObject:
   - component: {fileID: 1123270500075589078}
   - component: {fileID: 2828691359203619996}
   - component: {fileID: 1613482653719154696}
-  - component: {fileID: 8151664789906546415}
   - component: {fileID: 8151664789906546414}
+  - component: {fileID: 8151664789906546415}
   m_Layer: 0
   m_Name: Right
   m_TagString: rightArrow
@@ -4120,8 +4120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53d07c54ebaf0fd428ddedfdb5a64bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!64 &8151664789906546415
-MeshCollider:
+--- !u!65 &8151664789906546415
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4138,10 +4138,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2432090755550338912, guid: cf8a0eaf83359a4418de9a87bc903e3c, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.7000002, y: 0.7000002, z: 0.100000046}
+  m_Center: {x: 0.05000006, y: 0.20000005, z: 0.050000977}
 --- !u!1 &8954374055997401526
 GameObject:
   m_ObjectHideFlags: 0

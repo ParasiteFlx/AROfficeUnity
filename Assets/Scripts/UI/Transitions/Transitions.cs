@@ -12,6 +12,7 @@ public class Transitions : MonoBehaviour
     private ARAnchorManager arAnchorManager;
     public List<GameObject> mainMenuButtons = new List<GameObject>();
     private static Transitions instance;
+    public bool optionsIsRotating = false; 
     
     private void Awake()
     {
@@ -154,53 +155,56 @@ public class Transitions : MonoBehaviour
     }
 
     private IEnumerator FadeIn(GameObject button)
-    {      
+    {
+        float fadeDuration = 0.5f;
         MeshRenderer buttonMeshRenderer = button.GetComponent<MeshRenderer>();
 
-        if (buttonMeshRenderer!=null)
-        {        
-                   
+        if (buttonMeshRenderer != null)
+        {
             Color buttonColor = buttonMeshRenderer.material.color;
             buttonColor.a = 0f;
 
             button.SetActive(true);
 
-            for (float i = 0f; i <= 1f; i += 0.1f)
+            float elapsedTime = 0f;
+            while (elapsedTime < fadeDuration)
             {
-                buttonColor.a = i;
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Clamp01(elapsedTime / fadeDuration); // Normalise to 0-1 range
+                buttonColor.a = alpha;
                 buttonMeshRenderer.material.color = buttonColor;
-                yield return new WaitForSeconds(0.05f);
+                yield return null;
             }
 
-            buttonColor.a = 1f;
+            buttonColor.a = 1f; 
             buttonMeshRenderer.material.color = buttonColor;
-
-            //ToOpaqueMode(buttonMeshRenderer.material);
         }
-       
     }
 
-    private IEnumerator FadeOut(GameObject button) 
-    {   
+    private IEnumerator FadeOut(GameObject button)
+    {
+        float fadeDuration = 0.5f;
         MeshRenderer buttonMeshRenderer = button.GetComponent<MeshRenderer>();
+
         if (buttonMeshRenderer != null)
         {
-            //ToFadeMode(buttonMeshRenderer.material);
-          
             Color buttonColor = buttonMeshRenderer.material.color;
+            buttonColor.a = 1f;
 
-            for (float j = 1f; j >= 0f; j -= 0.1f)
+            float elapsedTime = 0f;
+            while (elapsedTime < fadeDuration)
             {
-                buttonColor.a = j;
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Clamp01(1 - (elapsedTime / fadeDuration)); 
+                buttonColor.a = alpha;
                 buttonMeshRenderer.material.color = buttonColor;
-                yield return new WaitForSeconds(0.05f);
+                yield return null;
             }
-            buttonColor.a = 0f;
+
+            buttonColor.a = 0f; 
             buttonMeshRenderer.material.color = buttonColor;
-          
             button.SetActive(false);
         }
-       
     }
 
     //Those two functions are from: https://discussions.unity.com/t/change-rendering-mode-via-script/667727/3 
@@ -312,84 +316,76 @@ public class Transitions : MonoBehaviour
        
     }
 
-    public void TransitionStarter(List<GameObject> buttons, bool reverse = false)
-    {
-        int transitionType = Options.Instance().GetTransitionType();
-
-        if (transitionType == 2)
-        {
-            StartCoroutine(Transitions.Instance().ComplexTransitions(buttons, reverse));
-          
-        }
-        else if (transitionType == 1)
-        {
-
-            StartCoroutine(Transitions.Instance().SimplifiedTransitions(buttons, reverse));
-          
-        }
-        else
-        {
-            Transitions.Instance().NoTransitions(buttons, reverse);
-          
-        }
-      
-    }
-
     private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string direction)
     {
         int transitionType = Options.Instance().GetTransitionType();
-        float angle=0;
         GameObject buttonName = null;
 
-
-        foreach(Transform child in buttonBody)
+        foreach (Transform child in buttonBody)
         {
             if (child.CompareTag("buttonName"))
             {
                 buttonName = child.gameObject;
+                break; 
             }
         }
 
         Vector3 buttonNamePosition = buttonName.transform.position;
-
+        Quaternion buttonNameRotation = buttonName.transform.rotation;
         string[] buttonTexts = { "None", "Simple", "Complex" };
-        List<string> buttonTextList = new List<string>();
+
+        float elapsedTime = 0f;
+        float targetAngle = 360f; 
+        float rotationSpeed = 360f; 
+        float rotationDuration = 1f;
 
         if (direction.Equals("leftArrow"))
-        {   
-            while(angle!=360)
+        {   if(optionsIsRotating == false)
             {
-                buttonBody.transform.Rotate(new Vector3(0,1,0),Space.Self);
-                buttonName.transform.Rotate(new Vector3(0,-1,0),Space.World);
-                buttonName.transform.position = buttonNamePosition;
-                if (angle == 180)
+                while (elapsedTime < rotationDuration)
                 {
-                     buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = buttonTexts[transitionType];
+                    elapsedTime += Time.deltaTime;
+                    float progress = Mathf.Clamp01(elapsedTime / rotationDuration);
+                    float currentAngle = progress * targetAngle;
 
+                    buttonBody.transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
+                    buttonName.transform.rotation = buttonNameRotation;
+                    buttonName.transform.position = buttonNamePosition;
+
+                    if (progress >= 0.5f && progress < 0.51f) // Update text around 180 degrees
+                    {
+                        buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = buttonTexts[transitionType];
+                    }
+
+                    yield return null;
                 }
-                yield return null;
-                angle++;
             }
-           
+          
         }
         else if (direction.Equals("rightArrow"))
-        {
-            while (angle != -360)
+        {   if(optionsIsRotating == false)
             {
-                buttonBody.transform.Rotate(new Vector3(0, -1, 0), Space.Self);
-                buttonName.transform.Rotate(new Vector3(0, 1, 0), Space.World);
-                buttonName.transform.position = buttonNamePosition;
-                if (angle == -180)
+                while (elapsedTime < rotationDuration)
                 {
-                    buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = buttonTexts[transitionType];
+                    elapsedTime += Time.deltaTime;
+                    float progress = Mathf.Clamp01(elapsedTime / rotationDuration);
+                    float currentAngle = progress * targetAngle;
 
+                    buttonBody.transform.Rotate(Vector3.down, rotationSpeed * Time.deltaTime, Space.Self);
+                    buttonName.transform.rotation = buttonNameRotation;
+                    buttonName.transform.position = buttonNamePosition;
+
+                    if (progress >= 0.5f && progress < 0.51f)
+                    {
+                        buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = buttonTexts[transitionType];
+                    }
+
+                    yield return null;
                 }
-                yield return null;
-                angle--;
             }
-
         }
-       
+
+        optionsIsRotating = false;
     }
 
     public void LeftRightArrowsChangeOption(Transform arrow, string direction)
@@ -409,6 +405,29 @@ public class Transitions : MonoBehaviour
         { 
             StartCoroutine(Transitions.Instance().LeftRightArrowsTransition(buttonBody, direction)); 
         }
+    }
+
+    public void TransitionStarter(List<GameObject> buttons, bool reverse = false)
+    {
+        int transitionType = Options.Instance().GetTransitionType();
+
+        if (transitionType == 2)
+        {
+            StartCoroutine(Transitions.Instance().ComplexTransitions(buttons, reverse));
+
+        }
+        else if (transitionType == 1)
+        {
+
+            StartCoroutine(Transitions.Instance().SimplifiedTransitions(buttons, reverse));
+
+        }
+        else
+        {
+            Transitions.Instance().NoTransitions(buttons, reverse);
+
+        }
+
     }
 
     public void Repositioning(int transitionType)
