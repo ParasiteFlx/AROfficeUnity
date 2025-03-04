@@ -10,6 +10,7 @@ using TMPro;
 public class Transitions : MonoBehaviour
 {
     private ARAnchorManager arAnchorManager;
+    public List<GameObject> activeMenu = new List<GameObject>();
     public List<GameObject> mainMenuButtons = new List<GameObject>();
     private static Transitions instance;
     public bool optionsIsRotating = false; 
@@ -36,32 +37,10 @@ public class Transitions : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-      
-        //arSession = GameObject.FindGameObjectWithTag("arSession").GetComponent<ARSession>();
-        arAnchorManager = GameObject.FindGameObjectWithTag("origin").GetComponent<ARAnchorManager>();
-
-        // Gets the immediate children's transform from the parents' Transform component
-        foreach (Transform button in transform)
-        {
-            mainMenuButtons.Add(button.gameObject);
-        }
-
-        //hooking/subscribing to the stateChanged Event to check if the ARSession is Tracking. If I dont do this, the buttons show up before everything sets up.
-        ARSession.stateChanged += ARSession_stateChanged;
-
+    {         
+        arAnchorManager = GameObject.FindGameObjectWithTag("origin").GetComponent<ARAnchorManager>();         
     }
 
-    private void ARSession_stateChanged(ARSessionStateChangedEventArgs obj)
-    {
-        
-        if (ARSession.state.Equals(ARSessionState.SessionTracking))
-        {
-            //unhooking because I need it once.
-            ARSession.stateChanged -= ARSession_stateChanged;
-            TransitionStarter(mainMenuButtons);
-        }
-    }
 
     public void NoTransitions(List<GameObject> buttons, bool reverse = false)
     {
@@ -72,11 +51,11 @@ public class Transitions : MonoBehaviour
 
             if (!reverse)
             {
-                ARAnchor anchor = button.GetComponent<ARAnchor>();
+               /* ARAnchor anchor = button.GetComponent<ARAnchor>();
                 if (anchor == null)
                 {
                     button.AddComponent<ARAnchor>();
-                }
+                }*/
             }
 
         }
@@ -89,10 +68,9 @@ public class Transitions : MonoBehaviour
         {
             foreach (GameObject button in buttons)
             {
-                
+                button.SetActive(true);
                 if (button.transform.childCount > 1)
-                {
-                    button.SetActive(true);            
+                {     
                     List<Coroutine> fadeIns = new List<Coroutine>();
                     foreach (Transform child in button.transform)
                     {
@@ -112,23 +90,23 @@ public class Transitions : MonoBehaviour
                     yield return FadeIn(button);
                 }
               
-                ARAnchor anchor = button.GetComponent<ARAnchor>();
+                /*ARAnchor anchor = button.GetComponent<ARAnchor>();
 
                 if (anchor == null)
                 {
                     button.AddComponent<ARAnchor>();
-                }
+                }*/
 
             }
         }
         else
         {
-            for (int i = mainMenuButtons.Count - 1; i >= 0; i--)
+            for (int i = buttons.Count - 1; i >= 0; i--)
             {
-                if (mainMenuButtons[i].transform.childCount > 1)
+                if (buttons[i].transform.childCount > 1)
                 {   
                    List<Coroutine> fadeouts = new List<Coroutine>();
-                    foreach (Transform child in mainMenuButtons[i].transform)
+                    foreach (Transform child in buttons[i].transform)
                     {
                         fadeouts.Add(StartCoroutine(FadeOut(child.gameObject)));                    
                     }
@@ -140,16 +118,10 @@ public class Transitions : MonoBehaviour
                 }
                 else
                 {
-                    yield return FadeOut(mainMenuButtons[i]);
+                    yield return FadeOut(buttons[i]);
                 }
                 
-                ARAnchor anchor = mainMenuButtons[i].GetComponent<ARAnchor>();
-                if (anchor == null)
-                {
-                    mainMenuButtons[i].AddComponent<ARAnchor>();
-                }
-
-                mainMenuButtons[i].SetActive(false);
+                buttons[i].SetActive(false);
             }
         }
     }
@@ -261,11 +233,11 @@ public class Transitions : MonoBehaviour
                 buttons[i].transform.position = initialButtonTransform.position;
                 buttons[i].transform.rotation = initialButtonTransform.rotation;
                 
-                ARAnchor anchor = buttons[i].GetComponent<ARAnchor>();
+               /* ARAnchor anchor = buttons[i].GetComponent<ARAnchor>();
                 if (anchor == null)
                 {
                     buttons[i].AddComponent<ARAnchor>();
-                }
+                }*/
             }
         }
         else
@@ -414,18 +386,14 @@ public class Transitions : MonoBehaviour
         if (transitionType == 2)
         {
             StartCoroutine(Transitions.Instance().ComplexTransitions(buttons, reverse));
-
         }
         else if (transitionType == 1)
         {
-
             StartCoroutine(Transitions.Instance().SimplifiedTransitions(buttons, reverse));
-
         }
         else
         {
             Transitions.Instance().NoTransitions(buttons, reverse);
-
         }
 
     }

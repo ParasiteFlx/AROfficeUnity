@@ -8,12 +8,14 @@ public class OptionsMenu : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {     
+    {
+        
         foreach (Transform button in transform)
         {
             optionsMenu.Add(button.gameObject);
         }
 
+        Transitions.Instance().activeMenu = optionsMenu;
         Invoke("Delay", 3);    
     }
 

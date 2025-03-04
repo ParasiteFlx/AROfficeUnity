@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 using Lean.Touch;
+using System;
+using System.Collections;
 
 public class ButtonPress : MonoBehaviour
 {
@@ -27,12 +29,14 @@ public class ButtonPress : MonoBehaviour
             GameObject objectHit = hit.collider.gameObject;        
             if(objectHit == gameObject)
             {
+                
                 TextMeshPro buttonText = objectHit.GetComponentInChildren<TextMeshPro>();
                
                 //Dau Enable la un script separat deoarece cand ma foloseam doar de ButtonPress event-ul OnFingerTap avea atatea subscribtii cate butoane aveau scriptul activ.
                 if (buttonText != null)
                 {
-                    objectHit.GetComponent<MainMenuOut>().enabled = true;
+                    Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
+                    
                     if (buttonText.text.Equals("Play"))
                     {
 
@@ -42,9 +46,11 @@ public class ButtonPress : MonoBehaviour
                     else if (buttonText.text.Equals("Options"))
                     {
 
+                        Debug.Log("Pressed");
                         GameObject optionsMenu = GameObject.FindGameObjectWithTag("options");
+                        optionsMenu.GetComponent<OptionsMenu>().enabled = false;
                         optionsMenu.GetComponent<OptionsMenu>().enabled = true;
-
+               
                     }
                     else if (buttonText.text.Equals("Credits"))
                     {
@@ -67,11 +73,24 @@ public class ButtonPress : MonoBehaviour
                         Transitions.Instance().LeftRightArrowsChangeOption(objectHit.transform, objectHit.gameObject.tag.ToString());
                         Transitions.Instance().optionsIsRotating = true;
                     }
+                    else if(objectHit.CompareTag("close"))
+                    {
+                                          
+                        Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
+                        Invoke("DelayMainMenuTransition", 3);
+                        Transitions.Instance().activeMenu = Transitions.Instance().mainMenuButtons;
+                    }
                 }
             }
           
 
         }
+
+    }
+
+    private void DelayMainMenuTransition ()
+    {
+        Transitions.Instance().TransitionStarter(Transitions.Instance().mainMenuButtons, false);
 
     }
    
