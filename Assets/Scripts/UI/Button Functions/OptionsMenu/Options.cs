@@ -8,10 +8,11 @@ public class Options : MonoBehaviour
 {
     private static Options instance;
     private string filePath;
-    private int[] transitionTypes = { 0, 1, 2 }; // 0 = noTransitions; 1 = simplifiedTransitions; 2 = complexTransitions;
-    private List<int> transitionTypeList;
-    public int currentTransitionType;
+    private static readonly int[] transitionTypes = { 0, 1, 2 }; // 0 = noTransitions; 1 = simplifiedTransitions; 2 = complexTransitions;
+    private static readonly List<int> transitionTypeList = new List<int>(transitionTypes);
+    public int currentTransitionType = transitionTypeList[1];
     private CurrentOptions currentOptions = new CurrentOptions();
+    private DefaultOptions defaultOptions = new DefaultOptions();
 
     private void Awake()
     {
@@ -37,16 +38,17 @@ public class Options : MonoBehaviour
     void Start()
     {
         filePath = Application.persistentDataPath + "/Options.json";
-        transitionTypeList = new List<int>(transitionTypes);
-        currentTransitionType = transitionTypeList[1];
-        DefaultOptions(currentOptions);
+        DefaultOptions(defaultOptions);     
+        
+        currentTransitionType = transitionTypeList[1];    
+
         LoadOptions();
         Debug.Log(filePath);
     }
 
-    private void DefaultOptions(CurrentOptions currentOptions)
+    private void DefaultOptions(DefaultOptions defaultOptions)
     {
-        currentOptions.transitionType = currentTransitionType;
+       defaultOptions.transitionType = transitionTypeList[1];
     }
 
 
@@ -100,7 +102,14 @@ public class Options : MonoBehaviour
 }
 
 [System.Serializable]
+public class DefaultOptions
+{
+    public int transitionType;
+}
+
+[System.Serializable]
 public class CurrentOptions
 {
     public int transitionType;
 }
+

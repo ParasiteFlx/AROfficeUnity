@@ -176,6 +176,8 @@ public class Transitions : MonoBehaviour
             buttonColor.a = 0f; 
             buttonMeshRenderer.material.color = buttonColor;
             button.SetActive(false);
+            buttonColor.a = 1f;
+            buttonMeshRenderer.material.color = buttonColor;
         }
     }
 
@@ -402,6 +404,5 @@ public class Transitions : MonoBehaviour
     {
 
     }
-
 
 }

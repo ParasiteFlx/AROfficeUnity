@@ -79,8 +79,7 @@ public class ButtonPress : MonoBehaviour
                         Transitions.Instance().optionsIsRotating = true;
                     }
                     else if(objectHit.CompareTag("close"))
-                    {
-                                          
+                    {                                        
                         Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
                         Invoke("DelayMainMenuTransition", 3);
                         Transitions.Instance().activeMenu = Transitions.Instance().mainMenuButtons;
