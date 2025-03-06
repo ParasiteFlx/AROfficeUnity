@@ -46,10 +46,15 @@ public class ButtonPress : MonoBehaviour
                     else if (buttonText.text.Equals("Options"))
                     {
 
-                        Debug.Log("Pressed");
-                        GameObject optionsMenu = GameObject.FindGameObjectWithTag("options");
-                        optionsMenu.GetComponent<OptionsMenu>().enabled = false;
-                        optionsMenu.GetComponent<OptionsMenu>().enabled = true;
+                        GameObject optionsMenu = GameObject.FindGameObjectWithTag("options");            
+                        if (optionsMenu.GetComponent<OptionsMenu>().enabled)
+                        {
+                            OptionsMenu.delegateTrans();
+                        }
+                        else
+                        {
+                            optionsMenu.GetComponent<OptionsMenu>().enabled = true;
+                        }
                
                     }
                     else if (buttonText.text.Equals("Credits"))

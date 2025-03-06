@@ -5,18 +5,24 @@ using UnityEngine;
 public class OptionsMenu : MonoBehaviour
 {
     private List<GameObject> optionsMenu = new List<GameObject>();
-
+    public delegate void transitionDelegate();
+    public static transitionDelegate delegateTrans;
     // Start is called before the first frame update
     void Start()
     {
-        
+        delegateTrans = TransitionStart;
         foreach (Transform button in transform)
         {
             optionsMenu.Add(button.gameObject);
         }
 
+        delegateTrans();   
+    }
+
+    private void TransitionStart()
+    {
         Transitions.Instance().activeMenu = optionsMenu;
-        Invoke("Delay", 3);    
+        Invoke("Delay", 3);
     }
 
     private void Delay()
