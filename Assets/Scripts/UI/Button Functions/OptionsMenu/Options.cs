@@ -9,8 +9,8 @@ public class Options : MonoBehaviour
     private static Options instance;
     private string filePath;
     private static readonly int[] transitionTypes = { 0, 1, 2 }; // 0 = noTransitions; 1 = simplifiedTransitions; 2 = complexTransitions;
-    private static readonly List<int> transitionTypeList = new List<int>(transitionTypes);
-    public int currentTransitionType = transitionTypeList[1];
+    private static List<int> transitionTypeList = new List<int>(transitionTypes);
+    private int currentTransitionType = transitionTypeList[2];
     private CurrentOptions currentOptions = new CurrentOptions();
     private DefaultOptions defaultOptions = new DefaultOptions();
 
@@ -38,11 +38,8 @@ public class Options : MonoBehaviour
     void Start()
     {
         filePath = Application.persistentDataPath + "/Options.json";
-        DefaultOptions(defaultOptions);     
-        
-        currentTransitionType = transitionTypeList[1];    
-
-        LoadOptions();
+        DefaultOptions(defaultOptions);               
+        //LoadOptions();
         Debug.Log(filePath);
     }
 

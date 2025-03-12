@@ -36,6 +36,7 @@ public class ButtonPress : MonoBehaviour
                 if (buttonText != null)
                 {
                     Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
+                    Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
                     
                     if (buttonText.text.Equals("Play"))
                     {
@@ -81,20 +82,19 @@ public class ButtonPress : MonoBehaviour
                     else if(objectHit.CompareTag("close"))
                     {                                        
                         Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
-                        Invoke("DelayMainMenuTransition", 3);
-                        Transitions.Instance().activeMenu = Transitions.Instance().mainMenuButtons;
+                        Invoke("DelayMainMenuTransition", 2);
+                        Transitions.Instance().activeMenu = Transitions.Instance().previousMenu;
                     }
                 }
             }
           
-
         }
 
     }
 
     private void DelayMainMenuTransition ()
     {
-        Transitions.Instance().TransitionStarter(Transitions.Instance().mainMenuButtons, false);
+        Transitions.Instance().TransitionStarter(Transitions.Instance().previousMenu, false);
 
     }
    

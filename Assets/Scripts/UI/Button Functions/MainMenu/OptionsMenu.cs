@@ -11,12 +11,13 @@ public class OptionsMenu : MonoBehaviour
     void Start()
     {
         delegateTrans = TransitionStart;
+
         foreach (Transform button in transform)
         {
             optionsMenu.Add(button.gameObject);
         }
 
-        delegateTrans();   
+        delegateTrans();
     }
 
     private void TransitionStart()

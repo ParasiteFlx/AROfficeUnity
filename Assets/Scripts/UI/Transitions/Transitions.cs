@@ -10,7 +10,9 @@ using TMPro;
 public class Transitions : MonoBehaviour
 {
     private ARAnchorManager arAnchorManager;
+    private Transform initialCamera;
     public List<GameObject> activeMenu = new List<GameObject>();
+    public List<GameObject> previousMenu = new List<GameObject>();
     public List<GameObject> mainMenuButtons = new List<GameObject>();
     private static Transitions instance;
     public bool optionsIsRotating = false; 
@@ -38,7 +40,8 @@ public class Transitions : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {         
-        arAnchorManager = GameObject.FindGameObjectWithTag("origin").GetComponent<ARAnchorManager>();         
+        arAnchorManager = GameObject.FindGameObjectWithTag("origin").GetComponent<ARAnchorManager>();
+        initialCamera = Camera.main.transform;
     }
 
 
@@ -48,16 +51,6 @@ public class Transitions : MonoBehaviour
         foreach (GameObject button in buttons)
         {
             button.SetActive(!reverse);
-
-            if (!reverse)
-            {
-               /* ARAnchor anchor = button.GetComponent<ARAnchor>();
-                if (anchor == null)
-                {
-                    button.AddComponent<ARAnchor>();
-                }*/
-            }
-
         }
     }
 
@@ -90,13 +83,6 @@ public class Transitions : MonoBehaviour
                     yield return FadeIn(button);
                 }
               
-                /*ARAnchor anchor = button.GetComponent<ARAnchor>();
-
-                if (anchor == null)
-                {
-                    button.AddComponent<ARAnchor>();
-                }*/
-
             }
         }
         else
@@ -209,10 +195,7 @@ public class Transitions : MonoBehaviour
 
     public IEnumerator ComplexTransitions(List<GameObject> buttons, bool reverse = false)
     {
-
-        Transform camera = Camera.main.transform;
-
-        Vector3 cameraPosition = camera.position;
+        Vector3 cameraPosition = initialCamera.position;
         if (!reverse)
         {
             for (int i = 0; i < buttons.Count; i++)
@@ -234,12 +217,7 @@ public class Transitions : MonoBehaviour
                
                 buttons[i].transform.position = initialButtonTransform.position;
                 buttons[i].transform.rotation = initialButtonTransform.rotation;
-                
-               /* ARAnchor anchor = buttons[i].GetComponent<ARAnchor>();
-                if (anchor == null)
-                {
-                    buttons[i].AddComponent<ARAnchor>();
-                }*/
+          
             }
         }
         else
@@ -384,6 +362,7 @@ public class Transitions : MonoBehaviour
     public void TransitionStarter(List<GameObject> buttons, bool reverse = false)
     {
         int transitionType = Options.Instance().GetTransitionType();
+        Debug.Log("TransitionType: " + transitionType);
 
         if (transitionType == 2)
         {
