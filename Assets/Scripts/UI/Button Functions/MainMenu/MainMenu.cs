@@ -35,6 +35,7 @@ public class MainMenu : MonoBehaviour
             Transitions.Instance().activeMenu = mainMenuButtons;
             Transitions.Instance().mainMenuButtons = mainMenuButtons;
             Transitions.Instance().TransitionStarter(mainMenuButtons);
+          
         }
     }
 }

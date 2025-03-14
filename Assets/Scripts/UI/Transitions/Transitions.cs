@@ -15,8 +15,10 @@ public class Transitions : MonoBehaviour
     public List<GameObject> previousMenu = new List<GameObject>();
     public List<GameObject> mainMenuButtons = new List<GameObject>();
     private static Transitions instance;
-    public bool optionsIsRotating = false; 
-    
+    public bool optionsIsRotating = false;
+    private float errorCorrectionFactorX = 0.0000385f; //This is the average of decrease in the x of the position that happens for buttons when they rotate in ComplexTransitions 
+
+
     private void Awake()
     {
         if (instance == null)
@@ -196,17 +198,18 @@ public class Transitions : MonoBehaviour
     public IEnumerator ComplexTransitions(List<GameObject> buttons, bool reverse = false)
     {
         Vector3 cameraPosition = initialCamera.position;
+        
         if (!reverse)
         {
+            Debug.Log("Complex transition normal called.");
+            List<Vector3> initialPositions = new List<Vector3>();
+            Repositioning(buttons, cameraPosition);
             for (int i = 0; i < buttons.Count; i++)
-            {
-
-                Transform initialButtonTransform = buttons[i].transform;
-                buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 180);
+            {              
                 buttons[i].SetActive(true);
                 float targetAngle = (i % 2 != 0) ? -180f : 180f;
                 float currentAngle = 0f;
-                float step = targetAngle > 0 ? 3f : -3f;
+                float step = targetAngle > 0 ? 6f : -6f;
 
                 while (Mathf.Abs(currentAngle) < Mathf.Abs(targetAngle))
                 {
@@ -214,35 +217,35 @@ public class Transitions : MonoBehaviour
                     currentAngle += step;
                     yield return null;
                 }
-               
-                buttons[i].transform.position = initialButtonTransform.position;
-                buttons[i].transform.rotation = initialButtonTransform.rotation;
-          
+
+                Vector3 buttonEulerAngles = buttons[i].transform.rotation.eulerAngles;
+                buttonEulerAngles.y = 180f;
+                buttons[i].transform.rotation = Quaternion.Euler(buttonEulerAngles);
             }
+                 
         }
         else
         {
+            Debug.Log("Complex transition reverse called.");
             for (int i = 0; i < buttons.Count; i++)
             {
                 float targetAngle = (i % 2 != 0) ? -180f : 180f;
                 float currentAngle = 0f;
-             
-                float step = targetAngle > 0 ? 3f : -3f;
+                float step = targetAngle > 0 ? 6f : -6f;
 
                 while (Mathf.Abs(currentAngle) < Mathf.Abs(targetAngle))
                 {
   
                     Rotation(cameraPosition, buttons[i], targetAngle < 0);                  
                     currentAngle += step;
-
                     yield return null;
                 }
-          
+                buttons[i].transform.eulerAngles = new Vector3(buttons[i].transform.eulerAngles.x, 360f, buttons[i].transform.eulerAngles.z);
                 buttons[i].SetActive(false);
             }          
         }
     }
-
+  
     private void Rotation(Vector3 cameraPosition,GameObject button,bool direction)
     {
         // true = comes from the left/goes to the right in front of the camera;
@@ -254,7 +257,7 @@ public class Transitions : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(relativePosition, Vector3.up);
             Quaternion current = button.transform.rotation;
             button.transform.rotation = Quaternion.Slerp(current, rotation, Time.deltaTime);
-            button.transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), -3f);
+            button.transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), -6f);
         }
         else
         {
@@ -263,9 +266,23 @@ public class Transitions : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(relativePosition, Vector3.up);
             Quaternion current = button.transform.rotation;
             button.transform.rotation = Quaternion.Slerp(current, rotation, Time.deltaTime);
-            button.transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 3f);
+            button.transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 6f);
         }
        
+    }
+
+    private void Repositioning(List<GameObject> buttons, Vector3 cameraPosition)
+    {
+
+        if (buttons[0].transform.rotation.eulerAngles.y == 180)
+        {   
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 180);
+            }
+        }
+        
+          
     }
 
     private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string direction)
@@ -299,7 +316,7 @@ public class Transitions : MonoBehaviour
                     elapsedTime += Time.deltaTime;
                     float progress = Mathf.Clamp01(elapsedTime / rotationDuration);
                     float currentAngle = progress * targetAngle;
-
+                    
                     buttonBody.transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
                     buttonName.transform.rotation = buttonNameRotation;
                     buttonName.transform.position = buttonNamePosition;
@@ -362,7 +379,6 @@ public class Transitions : MonoBehaviour
     public void TransitionStarter(List<GameObject> buttons, bool reverse = false)
     {
         int transitionType = Options.Instance().GetTransitionType();
-        Debug.Log("TransitionType: " + transitionType);
 
         if (transitionType == 2)
         {
@@ -379,9 +395,6 @@ public class Transitions : MonoBehaviour
 
     }
 
-    public void Repositioning(int transitionType)
-    {
-
-    }
+  
 
 }

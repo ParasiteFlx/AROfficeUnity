@@ -23,7 +23,7 @@ public class OptionsMenu : MonoBehaviour
     private void TransitionStart()
     {
         Transitions.Instance().activeMenu = optionsMenu;
-        Invoke("Delay", 3);
+        Invoke("Delay", 2);
     }
 
     private void Delay()
