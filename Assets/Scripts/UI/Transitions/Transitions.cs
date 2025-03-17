@@ -287,7 +287,7 @@ public class Transitions : MonoBehaviour
 
     private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string direction)
     {
-        int transitionType = Options.Instance().GetTransitionType();
+        int transitionType = Options.Instance().GetCurrentTransitionType();
         GameObject buttonName = null;
 
         foreach (Transform child in buttonBody)
@@ -301,7 +301,7 @@ public class Transitions : MonoBehaviour
 
         Vector3 buttonNamePosition = buttonName.transform.position;
         Quaternion buttonNameRotation = buttonName.transform.rotation;
-        string[] buttonTexts = { "None", "Simple", "Complex" };
+        string[] transitionTexts = { "None", "Simple", "Complex" };
 
         float elapsedTime = 0f;
         float targetAngle = 360f; 
@@ -323,7 +323,7 @@ public class Transitions : MonoBehaviour
 
                     if (progress >= 0.5f && progress < 0.51f) // Update text around 180 degrees
                     {
-                        buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = buttonTexts[transitionType];
+                        buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
                     }
 
                     yield return null;
@@ -346,7 +346,7 @@ public class Transitions : MonoBehaviour
 
                     if (progress >= 0.5f && progress < 0.51f)
                     {
-                        buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = buttonTexts[transitionType];
+                        buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
                     }
 
                     yield return null;

@@ -35,17 +35,19 @@ public class ButtonPress : MonoBehaviour
                 //Dau Enable la un script separat deoarece cand ma foloseam doar de ButtonPress event-ul OnFingerTap avea atatea subscribtii cate butoane aveau scriptul activ.
                 if (buttonText != null)
                 {
-                    Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
-                    Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
-                    
+                 
+
                     if (buttonText.text.Equals("Play"))
                     {
-
+                        Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
+                        Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
 
 
                     }
                     else if (buttonText.text.Equals("Options"))
                     {
+                        Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
+                        Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
 
                         GameObject optionsMenu = GameObject.FindGameObjectWithTag("options");            
                         if (optionsMenu.GetComponent<OptionsMenu>().enabled)
@@ -60,8 +62,14 @@ public class ButtonPress : MonoBehaviour
                     }
                     else if (buttonText.text.Equals("Credits"))
                     {
+                        Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
+                        Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
 
 
+                    }
+                    else if(buttonText.text.Equals("Apply"))
+                    {                        
+                        Options.Instance().SaveOptions();
                     }
                 }
                 else

@@ -12,7 +12,7 @@ public class Options : MonoBehaviour
     private static List<int> transitionTypeList = new List<int>(transitionTypes);
     private int currentTransitionType = transitionTypeList[2];
     private CurrentOptions currentOptions = new CurrentOptions();
-    private DefaultOptions defaultOptions = new DefaultOptions();
+    private CurrentOptions defaultOptions = new CurrentOptions();
 
     private void Awake()
     {
@@ -39,11 +39,11 @@ public class Options : MonoBehaviour
     {
         filePath = Application.persistentDataPath + "/Options.json";
         DefaultOptions(defaultOptions);               
-        //LoadOptions();
-        Debug.Log(filePath);
+        LoadOptions();
+
     }
 
-    private void DefaultOptions(DefaultOptions defaultOptions)
+    private void DefaultOptions(CurrentOptions defaultOptions)
     {
        defaultOptions.transitionType = transitionTypeList[1];
     }
@@ -51,6 +51,7 @@ public class Options : MonoBehaviour
 
     public void SaveOptions()
     {
+        currentOptions.transitionType = currentTransitionType;
         string optionsData = JsonUtility.ToJson(currentOptions);
         System.IO.File.WriteAllText(filePath, optionsData);
     }
@@ -59,12 +60,42 @@ public class Options : MonoBehaviour
     {
         if (System.IO.File.Exists(filePath))
         {
+            Debug.Log(filePath);
             string optionsData = System.IO.File.ReadAllText(filePath);
-            currentOptions = JsonUtility.FromJson<CurrentOptions>(optionsData);
+            if (optionsData != null)
+            {
+               currentOptions = OptionsDataCheck(optionsData);
+               currentTransitionType = currentOptions.transitionType;
+            }
+            else
+            {
+                currentOptions = defaultOptions;
+            }
         }
     }
 
-    public int GetTransitionType()
+
+    //In case a user changes the settings and inserts some wrong data.
+    private CurrentOptions OptionsDataCheck(string optionsData)
+    {
+        CurrentOptions options = JsonUtility.FromJson<CurrentOptions>(optionsData);
+        if (options.transitionType > 2)
+        {
+            options.transitionType = 0;
+        }
+        else if (options.transitionType < 0)
+        {
+            options.transitionType = 2;
+        }
+        else if (!(options.transitionType is int))
+        {
+            options.transitionType = 1;
+        }
+ 
+            return options;
+    }
+
+    public int GetCurrentTransitionType()
     {
         return currentTransitionType;
     }
@@ -73,6 +104,7 @@ public class Options : MonoBehaviour
     {
         if (right)
         {
+     
             if (currentTransitionType < 2)
             {
                 currentTransitionType++;
@@ -85,6 +117,7 @@ public class Options : MonoBehaviour
         }
         else
         {
+            
             if (currentTransitionType > 0)
             {
                 currentTransitionType--;
@@ -96,12 +129,12 @@ public class Options : MonoBehaviour
             }
         }
     }
-}
 
-[System.Serializable]
-public class DefaultOptions
-{
-    public int transitionType;
+    public int GetTransitionType()
+    {
+        return currentOptions.transitionType;
+    }
+
 }
 
 [System.Serializable]
