@@ -28,6 +28,10 @@ public class Options : MonoBehaviour
             // Destroy duplicate instances
             Destroy(gameObject);
         }
+
+        filePath = Application.persistentDataPath + "/Options.json";
+        DefaultOptions(defaultOptions);
+        LoadOptions();
     }
 
     public static Options Instance()
@@ -38,9 +42,7 @@ public class Options : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        filePath = Application.persistentDataPath + "/Options.json";
-        DefaultOptions(defaultOptions);               
-        LoadOptions();
+       
 
     }
 

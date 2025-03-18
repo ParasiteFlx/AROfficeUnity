@@ -6,14 +6,21 @@ using UnityEngine;
 public class TransitionButtonText : MonoBehaviour
 {
     private TextMeshPro buttonText;
+    private bool firstTimeStart = true;
 
-    void Awake()
+    void Start()
     {
         buttonText = transform.GetComponent<TextMeshPro>();
+        buttonText.text = Options.Instance().GetTransitionTypeName();
+        firstTimeStart = false;
     }
 
     void OnEnable()
-    {   
-        buttonText.text = Options.Instance().GetTransitionTypeName();
+    {
+        if (!firstTimeStart)
+        {
+            buttonText.text = Options.Instance().GetTransitionTypeName();
+        }
     }
+       
 }
