@@ -6,20 +6,14 @@ using UnityEngine;
 public class TransitionButtonText : MonoBehaviour
 {
     private TextMeshPro buttonText;
-    private int transitionType;
-    private string[] buttonTexts = { "None", "Simple", "Complex" };
-    // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
         buttonText = transform.GetComponent<TextMeshPro>();
-        transitionType = Options.Instance().GetTransitionType();
-        buttonText.text = buttonTexts[transitionType];
-
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void OnEnable()
+    {   
+        buttonText.text = Options.Instance().GetTransitionTypeName();
     }
 }

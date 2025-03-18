@@ -6,6 +6,7 @@ using System;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 using TMPro;
+using System.Diagnostics.Tracing;
 
 public class Transitions : MonoBehaviour
 {
@@ -52,6 +53,12 @@ public class Transitions : MonoBehaviour
        
         foreach (GameObject button in buttons)
         {
+            
+            if (button.transform.rotation.eulerAngles.y != 180)
+            {
+                button.transform.RotateAround(initialCamera.position, new Vector3(0, 1, 0), 180);
+            }
+
             button.SetActive(!reverse);
         }
     }
@@ -62,7 +69,12 @@ public class Transitions : MonoBehaviour
         if (!reverse)
         {
             foreach (GameObject button in buttons)
-            {
+            {   
+                if(button.transform.rotation.eulerAngles.y != 180)
+                {
+                    button.transform.RotateAround(initialCamera.position, new Vector3(0, 1, 0), 180);
+                }
+
                 button.SetActive(true);
                 if (button.transform.childCount > 1)
                 {     
@@ -201,7 +213,7 @@ public class Transitions : MonoBehaviour
         
         if (!reverse)
         {
-            Debug.Log("Complex transition normal called.");
+           
             List<Vector3> initialPositions = new List<Vector3>();
             Repositioning(buttons, cameraPosition);
             for (int i = 0; i < buttons.Count; i++)
@@ -226,7 +238,6 @@ public class Transitions : MonoBehaviour
         }
         else
         {
-            Debug.Log("Complex transition reverse called.");
             for (int i = 0; i < buttons.Count; i++)
             {
                 float targetAngle = (i % 2 != 0) ? -180f : 180f;
@@ -281,8 +292,7 @@ public class Transitions : MonoBehaviour
                 buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 180);
             }
         }
-        
-          
+         
     }
 
     private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string direction)
@@ -302,7 +312,10 @@ public class Transitions : MonoBehaviour
         Vector3 buttonNamePosition = buttonName.transform.position;
         Quaternion buttonNameRotation = buttonName.transform.rotation;
         string[] transitionTexts = { "None", "Simple", "Complex" };
+        string[] applyDefaultTexts = { "Apply", "Default Settings" };
 
+        TextMeshPro buttonNameText = buttonName.GetComponent<TextMeshPro>();
+   
         float elapsedTime = 0f;
         float targetAngle = 360f; 
         float rotationSpeed = 360f; 
@@ -323,7 +336,8 @@ public class Transitions : MonoBehaviour
 
                     if (progress >= 0.5f && progress < 0.51f) // Update text around 180 degrees
                     {
-                        buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
+                 
+                            buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];    
                     }
 
                     yield return null;
@@ -345,8 +359,8 @@ public class Transitions : MonoBehaviour
                     buttonName.transform.position = buttonNamePosition;
 
                     if (progress >= 0.5f && progress < 0.51f)
-                    {
-                        buttonBody.GetChild(1).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
+                    {                      
+                            buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];                                        
                     }
 
                     yield return null;

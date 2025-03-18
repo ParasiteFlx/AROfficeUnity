@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class OptionsMenu : MonoBehaviour
@@ -30,4 +31,5 @@ public class OptionsMenu : MonoBehaviour
     {
         Transitions.Instance().TransitionStarter(optionsMenu);
     }
+
 }

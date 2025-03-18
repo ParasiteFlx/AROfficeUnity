@@ -9,6 +9,7 @@ public class Options : MonoBehaviour
     private static Options instance;
     private string filePath;
     private static readonly int[] transitionTypes = { 0, 1, 2 }; // 0 = noTransitions; 1 = simplifiedTransitions; 2 = complexTransitions;
+    private string[] transitionTexts = { "None", "Simple", "Complex" };
     private static List<int> transitionTypeList = new List<int>(transitionTypes);
     private int currentTransitionType = transitionTypeList[2];
     private CurrentOptions currentOptions = new CurrentOptions();
@@ -46,12 +47,14 @@ public class Options : MonoBehaviour
     private void DefaultOptions(CurrentOptions defaultOptions)
     {
        defaultOptions.transitionType = transitionTypeList[1];
+       defaultOptions.transitionTypeName = transitionTexts[1];
     }
 
 
     public void SaveOptions()
     {
         currentOptions.transitionType = currentTransitionType;
+        currentOptions.transitionTypeName = transitionTexts[currentTransitionType];
         string optionsData = JsonUtility.ToJson(currentOptions);
         System.IO.File.WriteAllText(filePath, optionsData);
     }
@@ -91,6 +94,8 @@ public class Options : MonoBehaviour
         {
             options.transitionType = 1;
         }
+
+
  
             return options;
     }
@@ -135,11 +140,16 @@ public class Options : MonoBehaviour
         return currentOptions.transitionType;
     }
 
+    public string GetTransitionTypeName()
+    {
+        return currentOptions.transitionTypeName;
+    }
 }
 
 [System.Serializable]
 public class CurrentOptions
 {
     public int transitionType;
+    public string transitionTypeName;
 }
 
