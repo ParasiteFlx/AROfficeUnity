@@ -24,6 +24,7 @@ public class OptionsMenu : MonoBehaviour
     private void TransitionStart()
     {
         Transitions.Instance().activeMenu = optionsMenu;
+        Options.Instance().SetTemporaryTransitionType();
         Invoke("Delay", 2);
     }
 

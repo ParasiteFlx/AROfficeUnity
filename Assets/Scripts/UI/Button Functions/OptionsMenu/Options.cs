@@ -12,6 +12,7 @@ public class Options : MonoBehaviour
     private string[] transitionTexts = { "None", "Simple", "Complex" };
     private static List<int> transitionTypeList = new List<int>(transitionTypes);
     private int currentTransitionType = transitionTypeList[2];
+    private int temporaryTransitionType;
     private CurrentOptions currentOptions = new CurrentOptions();
     private CurrentOptions defaultOptions = new CurrentOptions();
 
@@ -39,12 +40,6 @@ public class Options : MonoBehaviour
         return instance;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-       
-
-    }
 
     private void DefaultOptions(CurrentOptions defaultOptions)
     {
@@ -55,6 +50,7 @@ public class Options : MonoBehaviour
 
     public void SaveOptions()
     {
+        currentTransitionType = temporaryTransitionType;
         currentOptions.transitionType = currentTransitionType;
         currentOptions.transitionTypeName = transitionTexts[currentTransitionType];
         string optionsData = JsonUtility.ToJson(currentOptions);
@@ -97,9 +93,20 @@ public class Options : MonoBehaviour
             options.transitionType = 1;
         }
 
-
+        bool correctName = false;
+        foreach( string type in transitionTexts)
+        {
+            if (options.transitionTypeName.Equals(type))
+            {
+                correctName = true; 
+            }
+        }
+        if (!correctName)
+        {
+            options.transitionTypeName = transitionTexts[options.transitionType];
+        }
  
-            return options;
+        return options;
     }
 
     public int GetCurrentTransitionType()
@@ -107,32 +114,48 @@ public class Options : MonoBehaviour
         return currentTransitionType;
     }
 
-    public void SetTransitionType(bool right)
+    public void SetCurrentTransitionType(int transitionType)
     {
+        currentTransitionType = transitionType;
+    }
+
+    public int GetTemporaryTransitionType()
+    {
+        return temporaryTransitionType;
+    }
+
+    public void SetTemporaryTransitionType()
+    {
+        temporaryTransitionType = currentTransitionType;
+    }
+
+    public void ChangeTransitionType(bool right)
+    {
+       
         if (right)
         {
      
-            if (currentTransitionType < 2)
+            if (temporaryTransitionType < 2)
             {
-                currentTransitionType++;
+               temporaryTransitionType++;
 
             }
             else
             {
-                currentTransitionType = 0;
+               temporaryTransitionType = 0;
             }
         }
         else
         {
             
-            if (currentTransitionType > 0)
+            if (temporaryTransitionType > 0)
             {
-                currentTransitionType--;
+                temporaryTransitionType--;
 
             }
             else
             {
-                currentTransitionType = 2;
+               temporaryTransitionType = 2;
             }
         }
     }

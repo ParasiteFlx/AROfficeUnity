@@ -17,9 +17,8 @@ public class Transitions : MonoBehaviour
     public List<GameObject> mainMenuButtons = new List<GameObject>();
     private static Transitions instance;
     public bool optionsIsRotating = false;
-    private float errorCorrectionFactorX = 0.0000385f; //This is the average of decrease in the x of the position that happens for buttons when they rotate in ComplexTransitions 
-
-
+    // public bool transitionEnded = true;
+  
     private void Awake()
     {
         if (instance == null)
@@ -50,7 +49,9 @@ public class Transitions : MonoBehaviour
 
     public void NoTransitions(List<GameObject> buttons, bool reverse = false)
     {
-       
+
+       // transitionEnded = false;
+
         foreach (GameObject button in buttons)
         {
             
@@ -61,11 +62,14 @@ public class Transitions : MonoBehaviour
 
             button.SetActive(!reverse);
         }
+
+      //  transitionEnded = true; 
     }
 
     public IEnumerator SimplifiedTransitions(List<GameObject> buttons, bool reverse = false)
     {
-        
+        //transitionEnded = false;
+
         if (!reverse)
         {
             foreach (GameObject button in buttons)
@@ -124,6 +128,9 @@ public class Transitions : MonoBehaviour
                 buttons[i].SetActive(false);
             }
         }
+
+       // transitionEnded = true;
+
     }
 
     private IEnumerator FadeIn(GameObject button)
@@ -209,6 +216,8 @@ public class Transitions : MonoBehaviour
 
     public IEnumerator ComplexTransitions(List<GameObject> buttons, bool reverse = false)
     {
+       // transitionEnded = false;
+
         Vector3 cameraPosition = initialCamera.position;
         
         if (!reverse)
@@ -255,8 +264,11 @@ public class Transitions : MonoBehaviour
                 buttons[i].SetActive(false);
             }          
         }
+
+        //transitionEnded = true;
+
     }
-  
+
     private void Rotation(Vector3 cameraPosition,GameObject button,bool direction)
     {
         // true = comes from the left/goes to the right in front of the camera;
@@ -295,27 +307,16 @@ public class Transitions : MonoBehaviour
          
     }
 
-    private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string direction)
+    private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string buttonName , string direction)
     {
-        int transitionType = Options.Instance().GetCurrentTransitionType();
-        GameObject buttonName = null;
+   
+        int transitionType = Options.Instance().GetTemporaryTransitionType();
+  
+        Quaternion buttonBodyInitialRotation = buttonBody.transform.rotation;
 
-        foreach (Transform child in buttonBody)
-        {
-            if (child.CompareTag("buttonName"))
-            {
-                buttonName = child.gameObject;
-                break; 
-            }
-        }
-
-        Vector3 buttonNamePosition = buttonName.transform.position;
-        Quaternion buttonNameRotation = buttonName.transform.rotation;
         string[] transitionTexts = { "None", "Simple", "Complex" };
         string[] applyDefaultTexts = { "Apply", "Default Settings" };
-
-        TextMeshPro buttonNameText = buttonName.GetComponent<TextMeshPro>();
-   
+  
         float elapsedTime = 0f;
         float targetAngle = 360f; 
         float rotationSpeed = 360f; 
@@ -331,17 +332,18 @@ public class Transitions : MonoBehaviour
                     float currentAngle = progress * targetAngle;
                     
                     buttonBody.transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
-                    buttonName.transform.rotation = buttonNameRotation;
-                    buttonName.transform.position = buttonNamePosition;
-
+        
                     if (progress >= 0.5f && progress < 0.51f) // Update text around 180 degrees
-                    {
-                 
-                            buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];    
+                    {       
+                          if(buttonName.Equals("Transition Type"))
+                          {
+                            buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
+                          }                         
                     }
 
                     yield return null;
                 }
+
             }
           
         }
@@ -355,12 +357,13 @@ public class Transitions : MonoBehaviour
                     float currentAngle = progress * targetAngle;
 
                     buttonBody.transform.Rotate(Vector3.down, rotationSpeed * Time.deltaTime, Space.Self);
-                    buttonName.transform.rotation = buttonNameRotation;
-                    buttonName.transform.position = buttonNamePosition;
-
+   
                     if (progress >= 0.5f && progress < 0.51f)
-                    {                      
-                            buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];                                        
+                    {            
+                            if(buttonName.Equals("Transition Type"))
+                            {
+                               buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
+                            }                                               
                     }
 
                     yield return null;
@@ -368,6 +371,7 @@ public class Transitions : MonoBehaviour
             }
         }
 
+        buttonBody.rotation = buttonBodyInitialRotation;
         optionsIsRotating = false;
     }
 
@@ -375,6 +379,7 @@ public class Transitions : MonoBehaviour
     {
         Transform buttonBody = null;
         Transform parentObjectTransform = arrow.parent;
+        string buttonName = null;
 
         foreach (Transform child in parentObjectTransform)
         {
@@ -382,30 +387,37 @@ public class Transitions : MonoBehaviour
             {
                 buttonBody = child;          
             }
+
+            if(child.CompareTag("buttonName"))
+            {
+                buttonName = child.gameObject.GetComponent<TextMeshPro>().text;
+            }
         }
 
-        if (buttonBody != null) 
+        if (buttonBody != null && optionsIsRotating == false ) 
         { 
-            StartCoroutine(Transitions.Instance().LeftRightArrowsTransition(buttonBody, direction)); 
+            StartCoroutine(Transitions.Instance().LeftRightArrowsTransition(buttonBody, buttonName, direction)); 
         }
     }
 
     public void TransitionStarter(List<GameObject> buttons, bool reverse = false)
     {
         int transitionType = Options.Instance().GetTransitionType();
-
-        if (transitionType == 2)
-        {
-            StartCoroutine(Transitions.Instance().ComplexTransitions(buttons, reverse));
-        }
-        else if (transitionType == 1)
-        {
-            StartCoroutine(Transitions.Instance().SimplifiedTransitions(buttons, reverse));
-        }
-        else
-        {
-            Transitions.Instance().NoTransitions(buttons, reverse);
-        }
+        //if(transitionEnded == true)
+        //{
+            if (transitionType == 2)
+            {
+                StartCoroutine(Transitions.Instance().ComplexTransitions(buttons, reverse));
+            }
+            else if (transitionType == 1)
+            {
+                StartCoroutine(Transitions.Instance().SimplifiedTransitions(buttons, reverse));
+            }
+            else
+            {
+                Transitions.Instance().NoTransitions(buttons, reverse);
+            }
+        //}
 
     }
 
