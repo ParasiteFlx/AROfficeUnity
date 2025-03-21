@@ -17,8 +17,9 @@ public class Transitions : MonoBehaviour
     public List<GameObject> mainMenuButtons = new List<GameObject>();
     private static Transitions instance;
     public bool optionsIsRotating = false;
-    // public bool transitionEnded = true;
   
+    // public bool transitionEnded = true;
+
     private void Awake()
     {
         if (instance == null)
@@ -309,9 +310,10 @@ public class Transitions : MonoBehaviour
 
     private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string buttonName , string direction)
     {
-   
+       
         int transitionType = Options.Instance().GetTemporaryTransitionType();
-  
+        bool applyState = false;
+
         Quaternion buttonBodyInitialRotation = buttonBody.transform.rotation;
 
         string[] transitionTexts = { "None", "Simple", "Complex" };
@@ -322,9 +324,10 @@ public class Transitions : MonoBehaviour
         float rotationSpeed = 360f; 
         float rotationDuration = 1f;
 
+      
         if (direction.Equals("leftArrow"))
         {   if(optionsIsRotating == false)
-            {
+            {               
                 while (elapsedTime < rotationDuration)
                 {
                     elapsedTime += Time.deltaTime;
@@ -332,13 +335,26 @@ public class Transitions : MonoBehaviour
                     float currentAngle = progress * targetAngle;
                     
                     buttonBody.transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
-        
+              
                     if (progress >= 0.5f && progress < 0.51f) // Update text around 180 degrees
                     {       
                           if(buttonName.Equals("Transition Type"))
                           {
                             buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
-                          }                         
+                          }
+                          else if(buttonName.Equals(""))
+                          {
+                            if (applyState)
+                            {
+                                buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = applyDefaultTexts[1];
+                            }
+                            else
+                            {
+                                buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = applyDefaultTexts[0];
+                            }
+
+                            applyState = !applyState;
+                          }
                     }
 
                     yield return null;
@@ -357,13 +373,26 @@ public class Transitions : MonoBehaviour
                     float currentAngle = progress * targetAngle;
 
                     buttonBody.transform.Rotate(Vector3.down, rotationSpeed * Time.deltaTime, Space.Self);
-   
+             
                     if (progress >= 0.5f && progress < 0.51f)
                     {            
                             if(buttonName.Equals("Transition Type"))
                             {
                                buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
-                            }                                               
+                            }
+                            else if (buttonName.Equals(""))
+                            {
+                            if (applyState)
+                            {
+                                buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = applyDefaultTexts[1];
+                            }
+                            else
+                            {
+                                buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = applyDefaultTexts[0];
+                            }
+
+                            applyState = !applyState;
+                            }
                     }
 
                     yield return null;
@@ -373,6 +402,7 @@ public class Transitions : MonoBehaviour
 
         buttonBody.rotation = buttonBodyInitialRotation;
         optionsIsRotating = false;
+   
     }
 
     public void LeftRightArrowsChangeOption(Transform arrow, string direction)
@@ -384,14 +414,17 @@ public class Transitions : MonoBehaviour
         foreach (Transform child in parentObjectTransform)
         {
             if (child.childCount != 0)
-            {
-                buttonBody = child;          
+            {   if (!child.CompareTag("buttonName"))
+                {
+                    buttonBody = child;
+                }
+                else
+                {
+                    buttonName = child.gameObject.GetComponentInChildren<TextMeshPro>().text;
+                }
             }
 
-            if(child.CompareTag("buttonName"))
-            {
-                buttonName = child.gameObject.GetComponent<TextMeshPro>().text;
-            }
+           
         }
 
         if (buttonBody != null && optionsIsRotating == false ) 
