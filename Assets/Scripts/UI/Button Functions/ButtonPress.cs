@@ -37,38 +37,43 @@ public class ButtonPress : MonoBehaviour
                 {
                     //if (Transitions.Instance().transitionEnded == true)
                     //{
-                        if (buttonText.text.Equals("Play"))
-                        {
-                            Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
-                            Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
+                    if (buttonText.text.Equals("Play"))
+                    {
+                        Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
+                        Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
 
 
-                        }
-                        else if (buttonText.text.Equals("Options"))
-                        {
-                            Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
-                            Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
+                    }
+                    else if (buttonText.text.Equals("Options"))
+                    {
 
-                            GameObject optionsMenu = GameObject.FindGameObjectWithTag("options");
-                            if (optionsMenu.GetComponent<OptionsMenu>().enabled)
-                            {
-                                OptionsMenu.delegateTrans();
-                            }
-                            else
-                            {
-                                optionsMenu.GetComponent<OptionsMenu>().enabled = true;
-                            }
+                        Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
+                        Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
 
-                        }
-                        else if (buttonText.text.Equals("Credits"))
+                        GameObject optionsMenu = GameObject.FindGameObjectWithTag("options");
+                        if (optionsMenu.GetComponent<OptionsMenu>().enabled)
                         {
-                            Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
-                            Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
+                            OptionsMenu.delegateTrans();
                         }
-                        else if (buttonText.text.Equals("Apply"))
+                        else
                         {
-                            Options.Instance().SaveOptions();
+                            optionsMenu.GetComponent<OptionsMenu>().enabled = true;
                         }
+
+                    }
+                    else if (buttonText.text.Equals("Credits"))
+                    {
+                        Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
+                        Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
+                    }
+                    else if (buttonText.text.Equals("Apply"))
+                    {
+                        Options.Instance().SaveOptions();
+                    }
+                    else if (buttonText.text.Equals("Default Settings"))
+                    {
+                        Options.Instance().ResetDefaultOptions();                   
+                    }
                     //}
                 }
                 else

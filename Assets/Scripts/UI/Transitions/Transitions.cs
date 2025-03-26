@@ -17,7 +17,8 @@ public class Transitions : MonoBehaviour
     public List<GameObject> mainMenuButtons = new List<GameObject>();
     private static Transitions instance;
     public bool optionsIsRotating = false;
-  
+    public bool applyState = true;
+
     // public bool transitionEnded = true;
 
     private void Awake()
@@ -42,7 +43,7 @@ public class Transitions : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {         
+    {
         arAnchorManager = GameObject.FindGameObjectWithTag("origin").GetComponent<ARAnchorManager>();
         initialCamera = Camera.main.transform;
     }
@@ -51,11 +52,11 @@ public class Transitions : MonoBehaviour
     public void NoTransitions(List<GameObject> buttons, bool reverse = false)
     {
 
-       // transitionEnded = false;
+        // transitionEnded = false;
 
         foreach (GameObject button in buttons)
         {
-            
+
             if (button.transform.rotation.eulerAngles.y != 180)
             {
                 button.transform.RotateAround(initialCamera.position, new Vector3(0, 1, 0), 180);
@@ -64,7 +65,7 @@ public class Transitions : MonoBehaviour
             button.SetActive(!reverse);
         }
 
-      //  transitionEnded = true; 
+        //  transitionEnded = true; 
     }
 
     public IEnumerator SimplifiedTransitions(List<GameObject> buttons, bool reverse = false)
@@ -74,34 +75,34 @@ public class Transitions : MonoBehaviour
         if (!reverse)
         {
             foreach (GameObject button in buttons)
-            {   
-                if(button.transform.rotation.eulerAngles.y != 180)
+            {
+                if (button.transform.rotation.eulerAngles.y != 180)
                 {
                     button.transform.RotateAround(initialCamera.position, new Vector3(0, 1, 0), 180);
                 }
 
                 button.SetActive(true);
                 if (button.transform.childCount > 1)
-                {     
+                {
                     List<Coroutine> fadeIns = new List<Coroutine>();
                     foreach (Transform child in button.transform)
                     {
                         fadeIns.Add(StartCoroutine(FadeIn(child.gameObject)));
-                        
+
                     }
 
                     foreach (Coroutine coroutine in fadeIns)
-                    { 
-                     
+                    {
+
                         yield return coroutine;
-                    
+
                     }
                 }
                 else
                 {
                     yield return FadeIn(button);
                 }
-              
+
             }
         }
         else
@@ -109,28 +110,28 @@ public class Transitions : MonoBehaviour
             for (int i = buttons.Count - 1; i >= 0; i--)
             {
                 if (buttons[i].transform.childCount > 1)
-                {   
-                   List<Coroutine> fadeouts = new List<Coroutine>();
+                {
+                    List<Coroutine> fadeouts = new List<Coroutine>();
                     foreach (Transform child in buttons[i].transform)
                     {
-                        fadeouts.Add(StartCoroutine(FadeOut(child.gameObject)));                    
+                        fadeouts.Add(StartCoroutine(FadeOut(child.gameObject)));
                     }
 
-                    foreach(Coroutine coroutine in fadeouts)
+                    foreach (Coroutine coroutine in fadeouts)
                     {
-                        yield return coroutine;               
+                        yield return coroutine;
                     }
                 }
                 else
                 {
                     yield return FadeOut(buttons[i]);
                 }
-                
+
                 buttons[i].SetActive(false);
             }
         }
 
-       // transitionEnded = true;
+        // transitionEnded = true;
 
     }
 
@@ -156,7 +157,7 @@ public class Transitions : MonoBehaviour
                 yield return null;
             }
 
-            buttonColor.a = 1f; 
+            buttonColor.a = 1f;
             buttonMeshRenderer.material.color = buttonColor;
         }
     }
@@ -175,13 +176,13 @@ public class Transitions : MonoBehaviour
             while (elapsedTime < fadeDuration)
             {
                 elapsedTime += Time.deltaTime;
-                float alpha = Mathf.Clamp01(1 - (elapsedTime / fadeDuration)); 
+                float alpha = Mathf.Clamp01(1 - (elapsedTime / fadeDuration));
                 buttonColor.a = alpha;
                 buttonMeshRenderer.material.color = buttonColor;
                 yield return null;
             }
 
-            buttonColor.a = 0f; 
+            buttonColor.a = 0f;
             buttonMeshRenderer.material.color = buttonColor;
             button.SetActive(false);
             buttonColor.a = 1f;
@@ -217,17 +218,17 @@ public class Transitions : MonoBehaviour
 
     public IEnumerator ComplexTransitions(List<GameObject> buttons, bool reverse = false)
     {
-       // transitionEnded = false;
+        // transitionEnded = false;
 
         Vector3 cameraPosition = initialCamera.position;
-        
+
         if (!reverse)
         {
-           
+
             List<Vector3> initialPositions = new List<Vector3>();
             Repositioning(buttons, cameraPosition);
             for (int i = 0; i < buttons.Count; i++)
-            {              
+            {
                 buttons[i].SetActive(true);
                 float targetAngle = (i % 2 != 0) ? -180f : 180f;
                 float currentAngle = 0f;
@@ -244,7 +245,7 @@ public class Transitions : MonoBehaviour
                 buttonEulerAngles.y = 180f;
                 buttons[i].transform.rotation = Quaternion.Euler(buttonEulerAngles);
             }
-                 
+
         }
         else
         {
@@ -256,21 +257,21 @@ public class Transitions : MonoBehaviour
 
                 while (Mathf.Abs(currentAngle) < Mathf.Abs(targetAngle))
                 {
-  
-                    Rotation(cameraPosition, buttons[i], targetAngle < 0);                  
+
+                    Rotation(cameraPosition, buttons[i], targetAngle < 0);
                     currentAngle += step;
                     yield return null;
                 }
                 buttons[i].transform.eulerAngles = new Vector3(buttons[i].transform.eulerAngles.x, 360f, buttons[i].transform.eulerAngles.z);
                 buttons[i].SetActive(false);
-            }          
+            }
         }
 
         //transitionEnded = true;
 
     }
 
-    private void Rotation(Vector3 cameraPosition,GameObject button,bool direction)
+    private void Rotation(Vector3 cameraPosition, GameObject button, bool direction)
     {
         // true = comes from the left/goes to the right in front of the camera;
         // false = comes from the right/goes to the left in front of the camera;
@@ -292,58 +293,64 @@ public class Transitions : MonoBehaviour
             button.transform.rotation = Quaternion.Slerp(current, rotation, Time.deltaTime);
             button.transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 6f);
         }
-       
+
     }
 
     private void Repositioning(List<GameObject> buttons, Vector3 cameraPosition)
     {
 
         if (buttons[0].transform.rotation.eulerAngles.y == 180)
-        {   
+        {
             for (int i = 0; i < buttons.Count; i++)
             {
                 buttons[i].transform.RotateAround(cameraPosition, new Vector3(0, 1, 0), 180);
             }
         }
-         
+
     }
 
-    private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string buttonName , string direction)
+    private IEnumerator LeftRightArrowsTransition(Transform buttonBody, string buttonName, string direction)
     {
-       
         int transitionType = Options.Instance().GetTemporaryTransitionType();
-        bool applyState = false;
 
         Quaternion buttonBodyInitialRotation = buttonBody.transform.rotation;
 
         string[] transitionTexts = { "None", "Simple", "Complex" };
         string[] applyDefaultTexts = { "Apply", "Default Settings" };
-  
-        float elapsedTime = 0f;
-        float targetAngle = 360f; 
-        float rotationSpeed = 360f; 
-        float rotationDuration = 1f;
 
-      
+        float elapsedTime = 0f;
+        float targetAngle = 360f;
+        float rotationSpeed = 360f;
+        float rotationDuration = 1f;
+        float tolerance = 0.03f;
+
+        bool firstTime = true;
+
         if (direction.Equals("leftArrow"))
-        {   if(optionsIsRotating == false)
-            {               
+        {
+            if (optionsIsRotating == false)
+            {
                 while (elapsedTime < rotationDuration)
                 {
                     elapsedTime += Time.deltaTime;
                     float progress = Mathf.Clamp01(elapsedTime / rotationDuration);
                     float currentAngle = progress * targetAngle;
-                    
+
                     buttonBody.transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.Self);
-              
-                    if (progress >= 0.5f && progress < 0.51f) // Update text around 180 degrees
-                    {       
-                          if(buttonName.Equals("Transition Type"))
-                          {
+                   
+                    if (progress >= 0.5f - tolerance && progress <= 0.5f + tolerance && firstTime) // Update text around 180 degrees
+                    {
+                        firstTime = false;
+                         Debug.Log("Am setat din sageti textul");
+
+                        if (buttonName.Equals("Transition Type"))
+                        {
+                            Debug.Log(Options.Instance().GetCurrentTransitionType() + "Temporary " + Options.Instance().GetTemporaryTransitionType());
                             buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
-                          }
-                          else if(buttonName.Equals(""))
-                          {
+                        }
+                        else if (buttonName.Equals(""))
+                        {
+                            
                             if (applyState)
                             {
                                 buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = applyDefaultTexts[1];
@@ -352,19 +359,21 @@ public class Transitions : MonoBehaviour
                             {
                                 buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = applyDefaultTexts[0];
                             }
-
+                            
                             applyState = !applyState;
-                          }
+                 
+                        }
                     }
 
                     yield return null;
                 }
 
             }
-          
+
         }
         else if (direction.Equals("rightArrow"))
-        {   if(optionsIsRotating == false)
+        {
+            if (optionsIsRotating == false)
             {
                 while (elapsedTime < rotationDuration)
                 {
@@ -373,15 +382,19 @@ public class Transitions : MonoBehaviour
                     float currentAngle = progress * targetAngle;
 
                     buttonBody.transform.Rotate(Vector3.down, rotationSpeed * Time.deltaTime, Space.Self);
-             
-                    if (progress >= 0.5f && progress < 0.51f)
-                    {            
-                            if(buttonName.Equals("Transition Type"))
-                            {
-                               buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
-                            }
-                            else if (buttonName.Equals(""))
-                            {
+                  
+                    if (progress >= 0.5f - tolerance && progress <= 0.5f + tolerance && firstTime)
+                    {
+                        Debug.Log("Am setat din sageti textul");
+                        firstTime = false;
+                        if (buttonName.Equals("Transition Type"))
+                        {
+                            Debug.Log(Options.Instance().GetCurrentTransitionType() + "Temporary " + Options.Instance().GetTemporaryTransitionType());
+                            buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = transitionTexts[transitionType];
+                        }
+                        else if (buttonName.Equals(""))
+                        {
+                           
                             if (applyState)
                             {
                                 buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = applyDefaultTexts[1];
@@ -390,21 +403,26 @@ public class Transitions : MonoBehaviour
                             {
                                 buttonBody.GetChild(0).GetComponent<TextMeshPro>().text = applyDefaultTexts[0];
                             }
-
+                     
                             applyState = !applyState;
-                            }
+                  
+                        }
+                    }
+                    else
+                    {
+                        //Debug.Log("progress: " + progress + " firsTime " + firstTime);
                     }
 
-                    yield return null;
+                        yield return null;
                 }
             }
         }
 
         buttonBody.rotation = buttonBodyInitialRotation;
         optionsIsRotating = false;
-   
-    }
 
+    }
+    
     public void LeftRightArrowsChangeOption(Transform arrow, string direction)
     {
         Transform buttonBody = null;
@@ -414,7 +432,8 @@ public class Transitions : MonoBehaviour
         foreach (Transform child in parentObjectTransform)
         {
             if (child.childCount != 0)
-            {   if (!child.CompareTag("buttonName"))
+            {
+                if (!child.CompareTag("buttonName"))
                 {
                     buttonBody = child;
                 }
@@ -424,12 +443,12 @@ public class Transitions : MonoBehaviour
                 }
             }
 
-           
+
         }
 
-        if (buttonBody != null && optionsIsRotating == false ) 
-        { 
-            StartCoroutine(Transitions.Instance().LeftRightArrowsTransition(buttonBody, buttonName, direction)); 
+        if (buttonBody != null && optionsIsRotating == false)
+        {
+            StartCoroutine(Transitions.Instance().LeftRightArrowsTransition(buttonBody, buttonName, direction));
         }
     }
 
@@ -438,22 +457,22 @@ public class Transitions : MonoBehaviour
         int transitionType = Options.Instance().GetTransitionType();
         //if(transitionEnded == true)
         //{
-            if (transitionType == 2)
-            {
-                StartCoroutine(Transitions.Instance().ComplexTransitions(buttons, reverse));
-            }
-            else if (transitionType == 1)
-            {
-                StartCoroutine(Transitions.Instance().SimplifiedTransitions(buttons, reverse));
-            }
-            else
-            {
-                Transitions.Instance().NoTransitions(buttons, reverse);
-            }
+        if (transitionType == 2)
+        {
+            StartCoroutine(Transitions.Instance().ComplexTransitions(buttons, reverse));
+        }
+        else if (transitionType == 1)
+        {
+            StartCoroutine(Transitions.Instance().SimplifiedTransitions(buttons, reverse));
+        }
+        else
+        {
+            Transitions.Instance().NoTransitions(buttons, reverse);
+        }
         //}
 
     }
 
-  
+
 
 }

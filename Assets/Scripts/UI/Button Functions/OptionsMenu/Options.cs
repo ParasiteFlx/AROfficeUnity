@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using static System.TimeZoneInfo;
 
 public class Options : MonoBehaviour
 {
@@ -11,7 +13,7 @@ public class Options : MonoBehaviour
     private static readonly int[] transitionTypes = { 0, 1, 2 }; // 0 = noTransitions; 1 = simplifiedTransitions; 2 = complexTransitions;
     private string[] transitionTexts = { "None", "Simple", "Complex" };
     private static List<int> transitionTypeList = new List<int>(transitionTypes);
-    private int currentTransitionType = transitionTypeList[2];
+    private int currentTransitionType = transitionTypeList[1];
     private int temporaryTransitionType;
     private CurrentOptions currentOptions = new CurrentOptions();
     private CurrentOptions defaultOptions = new CurrentOptions();
@@ -47,6 +49,43 @@ public class Options : MonoBehaviour
        defaultOptions.transitionTypeName = transitionTexts[1];
     }
 
+    public void ResetDefaultOptions()
+    {
+        
+        currentOptions = new CurrentOptions
+        {
+            transitionType = defaultOptions.transitionType,
+            transitionTypeName = defaultOptions.transitionTypeName
+        };
+      
+        SetCurrentTransitionType(defaultOptions.transitionType);
+        SetTemporaryTransitionType();
+        foreach(GameObject button in Transitions.Instance().activeMenu)
+        {
+            string buttonName = null;
+
+            foreach(Transform child in button.transform)
+            {
+                if (child.childCount > 0)
+                {
+                    if (child.CompareTag("buttonName"))
+                    {
+                        buttonName = child.GetChild(0).GetComponent<TextMeshPro>().text;
+                    }
+                    else
+                    {
+                        if(buttonName!=null)
+                        {
+                            if (buttonName.Equals("Transition Type"))
+                            {
+                                child.GetChild(0).GetComponent<TextMeshPro>().text = currentOptions.transitionTypeName;
+                            }                        
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public void SaveOptions()
     {
@@ -61,7 +100,7 @@ public class Options : MonoBehaviour
     {
         if (System.IO.File.Exists(filePath))
         {
-            Debug.Log(filePath);
+           // Debug.Log(filePath);
             string optionsData = System.IO.File.ReadAllText(filePath);
             if (optionsData != null)
             {
@@ -176,5 +215,6 @@ public class CurrentOptions
 {
     public int transitionType;
     public string transitionTypeName;
+    
 }
 
