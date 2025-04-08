@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "689947660748",
+    "project_id": "arofficedatabase",
+    "storage_bucket": "arofficedatabase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689947660748:android:41d10cf0a5ae394d1c8d69",
+        "android_client_info": {
+          "package_name": "com.Ether.AROffice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_RKyXsKY8Uw1i7h3rVtr3JvebSQ1F9Nk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
