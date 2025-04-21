@@ -10,7 +10,6 @@ public class ButtonPress : MonoBehaviour
     private void OnEnable()
     {
         LeanTouch.OnFingerTap += ButtonPressLogic;
-
     }
 
     private void OnDisable()
