@@ -15,6 +15,7 @@ TagManager:
   - rightArrow
   - buttonName
   - close
+  - password
   layers:
   - Default
   - TransparentFX

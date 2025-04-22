@@ -40,8 +40,6 @@ public class ButtonPress : MonoBehaviour
                     {
                         Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
                         Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
-
-
                     }
                     else if (buttonText.text.Equals("Options"))
                     {
@@ -95,6 +93,10 @@ public class ButtonPress : MonoBehaviour
                         Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
                         Invoke("DelayMainMenuTransition", 2);
                         Transitions.Instance().activeMenu = Transitions.Instance().previousMenu;
+                    }
+                    else if(objectHit.CompareTag("password"))
+                    {
+                        objectHit.GetComponent<EyePassword>().enabled = true;
                     }
                 }
 

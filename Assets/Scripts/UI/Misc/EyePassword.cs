@@ -1,8 +1,5 @@
 using Lean.Touch;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,53 +7,44 @@ public class EyePassword : MonoBehaviour
 {
     private void OnEnable()
     {
-        LeanTouch.OnFingerTap += PasswordVisibility;
+        PasswordVisibility();
     }
 
-    private void OnDisable()
+    private void PasswordVisibility()
     {
-        LeanTouch.OnFingerTap -= PasswordVisibility;
-    }
 
-    
+        Transform passwordField = gameObject.transform.parent;
+        TMP_InputField inputField = passwordField.GetComponent<TMP_InputField>();
 
-
-    private void PasswordVisibility(LeanFinger finger)
-    {
-        Ray ray = finger.GetStartRay(Camera.main);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
+        foreach (Transform child in passwordField)
         {
-            GameObject objectHit = hit.collider.gameObject;
-            Transform passwordField = objectHit.transform.parent;
-            TMP_InputField inputField = passwordField.GetComponent<TMP_InputField>();
 
-            foreach(Transform child in passwordField)
+            if (child.childCount == 0)
             {
-               
-                if (child.childCount == 0)
-                {   
-                    if(child.gameObject.activeSelf)
-                    {
-                     
-                        child.gameObject.SetActive(false);
-                        inputField.contentType = TMP_InputField.ContentType.Password;
-                        EventSystem.current.SetSelectedGameObject(null);
-                        EventSystem.current.SetSelectedGameObject(inputField.gameObject);
-                        
-                    }
-                    else
-                    {
-                        
-                        child.gameObject.SetActive(true);
-                        inputField.contentType = TMP_InputField.ContentType.Standard;
-                        EventSystem.current.SetSelectedGameObject(null);
-                        EventSystem.current.SetSelectedGameObject(inputField.gameObject);
-                    }
+                Debug.Log(child.gameObject.name);
+
+                if (child.gameObject.activeSelf)
+                {
+
+                    child.gameObject.SetActive(false);
+                    inputField.contentType = TMP_InputField.ContentType.Password;
+                    EventSystem.current.SetSelectedGameObject(null);
+                    EventSystem.current.SetSelectedGameObject(inputField.gameObject);
+
+                }
+                else
+                {
+                    child.gameObject.SetActive(true);
+                    inputField.contentType = TMP_InputField.ContentType.Standard;
+                    EventSystem.current.SetSelectedGameObject(null);
+                    EventSystem.current.SetSelectedGameObject(inputField.gameObject);
                 }
             }
+
+            gameObject.GetComponent<EyePassword>().enabled = false;
+
         }
+
 
     }
 }
