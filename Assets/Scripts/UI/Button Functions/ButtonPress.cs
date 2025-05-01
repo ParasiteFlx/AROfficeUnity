@@ -3,6 +3,7 @@ using UnityEngine;
 using Lean.Touch;
 using System;
 using System.Collections;
+using UnityEngine.XR.ARFoundation;
 
 public class ButtonPress : MonoBehaviour
 {
@@ -38,6 +39,10 @@ public class ButtonPress : MonoBehaviour
                     //{
                     if (buttonText.text.Equals("Play"))
                     {
+                        GameObject origin = GameObject.FindGameObjectWithTag("origin");
+                        origin.GetComponent<ARPlaneManager>().enabled = true;
+                        origin.GetComponent<PlaneControl>().enabled = true;
+                        origin.GetComponent<PlaneSelection>().enabled = true;
                         Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
                         Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
                     }

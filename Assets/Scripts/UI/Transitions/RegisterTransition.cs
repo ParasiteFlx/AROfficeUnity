@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RegisterTransition : MonoBehaviour
 {
-    private GameObject loginForm, registerForm;
+    private GameObject loginForm, registerForm, menu;
     private CanvasGroup loginCanvasGroup, registerCanvasGroup;
     void Start()
     {
@@ -12,11 +13,22 @@ public class RegisterTransition : MonoBehaviour
         loginCanvasGroup = loginForm.GetComponent<CanvasGroup>();
         registerForm = gameObject.transform.GetChild(1).gameObject;
         registerCanvasGroup = registerForm.GetComponent<CanvasGroup>();
+        menu = GameObject.FindGameObjectWithTag("menu");
     }
 
     public void FromLoginToRegister()
     {
         StartCoroutine(FromLoginToRegisterCoroutine());
+    }
+
+    public void FromRegisterToLogin()
+    {
+        StartCoroutine(FromRegisterToLoginCoroutine());
+    }
+
+    public void FromLoginToMainMenu()
+    {
+        StartCoroutine(FromLoginToMainMenuCoroutine());
     }
 
     private IEnumerator FromLoginToRegisterCoroutine()
@@ -26,6 +38,23 @@ public class RegisterTransition : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         registerForm.SetActive(true);
         yield return StartCoroutine(FadeIn(registerCanvasGroup));
+    }
+
+    private IEnumerator FromRegisterToLoginCoroutine()
+    {
+        yield return StartCoroutine(FadeOut(registerCanvasGroup));
+        registerForm.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        loginForm.SetActive(true);
+        yield return StartCoroutine(FadeIn(loginCanvasGroup));
+    }
+
+    private IEnumerator FromLoginToMainMenuCoroutine()
+    {
+        yield return StartCoroutine(FadeOut(loginCanvasGroup));
+        loginForm.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        menu.GetComponent<MainMenu>().enabled = true;
     }
    
     private IEnumerator FadeOut(CanvasGroup target)

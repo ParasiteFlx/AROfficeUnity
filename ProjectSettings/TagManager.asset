@@ -16,6 +16,12 @@ TagManager:
   - buttonName
   - close
   - password
+  - login
+  - register
+  - menu
+  - confirmpass
+  - userError
+  - emailError
   layers:
   - Default
   - TransparentFX
