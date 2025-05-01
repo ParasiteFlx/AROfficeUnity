@@ -1,13 +1,13 @@
 using TMPro;
 using UnityEngine;
-using Firebase.Storage;
 using Firebase.Extensions;
+using System.Threading.Tasks;
 
 public class Register : MonoBehaviour
 {
 
     Firebase.Auth.FirebaseAuth auth;
-    Firebase.Storage.FirebaseStorage storage;
+
 
     User User;
     [SerializeField]
@@ -23,7 +23,6 @@ public class Register : MonoBehaviour
     private void Start()
     {   
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-        storage = Firebase.Storage.FirebaseStorage.DefaultInstance;
         User = new User();
         usernameError = false;
         passwordError = false;
