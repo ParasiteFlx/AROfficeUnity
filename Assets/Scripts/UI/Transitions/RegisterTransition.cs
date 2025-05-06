@@ -1,14 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class RegisterTransition : MonoBehaviour
 {
     private GameObject loginForm, registerForm, menu;
     private CanvasGroup loginCanvasGroup, registerCanvasGroup;
+    public delegate void RegisterTransitionDelegate();
+    public static RegisterTransitionDelegate fromLogToReg;
+    public delegate void LoginMainMenuDelegate();
+    public static LoginMainMenuDelegate fromLogToMainMenu;
+    [SerializeField]
+    private TMP_InputField usernameInput, passwordInput, confirmPass, email, loginUsernameInput, loginPasswordInput;
+
     void Start()
     {
+        fromLogToReg = FromRegisterToLogin;
+        fromLogToMainMenu = FromLoginToMainMenu;
         loginForm = gameObject.transform.GetChild(0).gameObject;
         loginCanvasGroup = loginForm.GetComponent<CanvasGroup>();
         registerForm = gameObject.transform.GetChild(1).gameObject;
@@ -34,6 +44,8 @@ public class RegisterTransition : MonoBehaviour
     private IEnumerator FromLoginToRegisterCoroutine()
     {
         yield return StartCoroutine(FadeOut(loginCanvasGroup));
+        loginUsernameInput.text = "";
+        loginPasswordInput.text = "";
         loginForm.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         registerForm.SetActive(true);
@@ -43,6 +55,10 @@ public class RegisterTransition : MonoBehaviour
     private IEnumerator FromRegisterToLoginCoroutine()
     {
         yield return StartCoroutine(FadeOut(registerCanvasGroup));
+        usernameInput.text = "";
+        passwordInput.text = "";
+        confirmPass.text = "";
+        email.text = "";
         registerForm.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         loginForm.SetActive(true);

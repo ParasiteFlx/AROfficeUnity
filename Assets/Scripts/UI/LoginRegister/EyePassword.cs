@@ -21,8 +21,7 @@ public class EyePassword : MonoBehaviour
 
             if (child.childCount == 0)
             {
-                Debug.Log(child.gameObject.name);
-
+              
                 if (child.gameObject.activeSelf)
                 {
 

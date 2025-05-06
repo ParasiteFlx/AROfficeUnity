@@ -18,7 +18,7 @@ public class RegisterValidators : MonoBehaviour
         Transform parent = gameObject.transform.parent;
         label = parent.gameObject.GetComponent<TextMeshProUGUI>().text;
         inputField = gameObject.gameObject.GetComponent<TMP_InputField>();
-    
+     
     }
 
     private void Update()
@@ -29,68 +29,82 @@ public class RegisterValidators : MonoBehaviour
 
     private void Validator()
     {
-        if(label.Equals("Username:"))
+        if (label.Equals("Username:"))
         {
             string specialCharacterPattern = @"[^a-zA-Z0-9\s]";
 
-            if(!input.Equals(""))
+            if (!input.Equals(""))
             {
                 if (Regex.IsMatch(input, specialCharacterPattern))
                 {
                     errorTMP.text = "The username contains special characters!";
                     Register.usernameCheck(true);
-                }  
-                else
-                {                 
-                        errorTMP.text = "";                                                       
                 }
-            }
-            else
-            {
-                errorTMP.text = "";
-            }
-          
-        }
-        else if(label.Equals("Password:"))
-        {
-            string missingCharPattern = @"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).+$";
-
-            if (!input.Equals(""))
-            {
-                if(!Regex.IsMatch(input,missingCharPattern))
+                else
                 {
-                    errorTMP.text = "It must have an uppercase letter, a number and a special character!";
-                    Register.passwordCheck(true);
-                }
-                else
-                {                   
+                    Register.usernameCheck(false);
                     errorTMP.text = "";
                 }
             }
             else
             {
-                errorTMP.text = "";              
+                Register.usernameCheck(true);          
+                errorTMP.text = "";
+            }
+
+        }
+        else if (label.Equals("Password:"))
+        {
+            string missingCharPattern = @"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s])(?=.*[A-Z]).+$";
+
+            if (!input.Equals(""))
+            {
+                if (!Regex.IsMatch(input, missingCharPattern))
+                {
+                    errorTMP.text = "It must have an uppercase letter, a number and a special character!";
+                    Register.passwordCheck(true);
+                }
+                else if (input.Length <= 5)
+                {
+                    errorTMP.text = "Password must have 6 or more characters!";
+                    Register.passwordCheck(true);
+                }
+                else
+                {
+                    Register.passwordCheck(false);
+                    errorTMP.text = "";
+                }
+            }
+            else
+            {
+                Register.passwordCheck(true);
+                if (!errorTMP.text.Equals("Field is empty!"))
+                {
+                    errorTMP.text = "";
+                }
             }
         }
-        else if(label.Equals("Email:"))
+        else if (label.Equals("Email:"))
         {
             string emailPattern = @"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$";
 
             if (!input.Equals(""))
             {
-                if(!Regex.IsMatch(input,emailPattern))
+                if (!Regex.IsMatch(input, emailPattern))
                 {
                     errorTMP.text = "Email is not valid!";
                     Register.emailCheck(true);
                 }
                 else
                 {
+                    Register.emailCheck(false);
                     errorTMP.text = "";
                 }
             }
             else
             {
-                errorTMP.text = "";
+                Register.emailCheck(true);
+                errorTMP.text = "";            
             }
         }
         else
@@ -106,13 +120,18 @@ public class RegisterValidators : MonoBehaviour
                     Register.confirmPassCheck(true);
                 }
                 else
-                {        
-                    errorTMP.text = "";            
+                {
+                    Register.confirmPassCheck(false);
+                    errorTMP.text = "";
                 }
             }
             else
             {
-                errorTMP.text = "";
+                Register.confirmPassCheck(true);
+                if (!errorTMP.text.Equals("Field is empty!"))
+                {
+                    errorTMP.text = "";
+                }
             }
 
         }

@@ -136,8 +136,6 @@ GameObject:
   - component: {fileID: 9800105}
   - component: {fileID: 9800104}
   - component: {fileID: 9800107}
-  - component: {fileID: 9800109}
-  - component: {fileID: 9800110}
   m_Layer: 5
   m_Name: UsernameInput
   m_TagString: Untagged
@@ -233,9 +231,9 @@ MonoBehaviour:
   m_OnSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 9800109}
-        m_TargetAssemblyTypeName: ValidatorsEnabler, Assembly-CSharp
-        m_MethodName: EnableScript
+      - m_Target: {fileID: 317375155}
+        m_TargetAssemblyTypeName: ClearLoginErrors, Assembly-CSharp
+        m_MethodName: ClearUsernameError
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -248,7 +246,7 @@ MonoBehaviour:
   m_OnDeselect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 9800109}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ValidatorsEnabler, Assembly-CSharp
         m_MethodName: DisableScript
         m_Mode: 1
@@ -337,31 +335,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5fd9da8daec23f4a9e4c309058f9096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &9800109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9800102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6f10ab56df20a41848088615e721a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &9800110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9800102}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd9cc4d5c772f57449a7ed9353029d0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  errorTMP: {fileID: 1464118329}
 --- !u!1 &44753784
 GameObject:
   m_ObjectHideFlags: 0
@@ -1152,7 +1125,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1049611746}
         m_TargetAssemblyTypeName: Register, Assembly-CSharp
-        m_MethodName: HasErrors
+        m_MethodName: RegisterUserAsync
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2114,9 +2087,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1339308112}
-        m_TargetAssemblyTypeName: RegisterTransition, Assembly-CSharp
-        m_MethodName: FromLoginToMainMenu
+      - m_Target: {fileID: 317375154}
+        m_TargetAssemblyTypeName: Login, Assembly-CSharp
+        m_MethodName: LoginUserAsync
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2549,13 +2522,15 @@ GameObject:
   m_Component:
   - component: {fileID: 317375152}
   - component: {fileID: 317375153}
+  - component: {fileID: 317375154}
+  - component: {fileID: 317375155}
   m_Layer: 5
   m_Name: LoginForm
   m_TagString: login
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &317375152
 Transform:
   m_ObjectHideFlags: 0
@@ -2589,6 +2564,36 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &317375154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317375151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6e37df34f38574e866b0d338e501a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  username: {fileID: 9800104}
+  password: {fileID: 604595531}
+  usernameErrorField: {fileID: 1464118329}
+  passwordErrorField: {fileID: 1743780209}
+--- !u!114 &317375155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317375151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d57dfdbcca0c5f640bdbaa724922a3ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usernameError: {fileID: 1464118329}
+  passwordError: {fileID: 1743780209}
 --- !u!1 &318694327
 GameObject:
   m_ObjectHideFlags: 0
@@ -3722,8 +3727,6 @@ GameObject:
   - component: {fileID: 604595532}
   - component: {fileID: 604595531}
   - component: {fileID: 604595534}
-  - component: {fileID: 604595536}
-  - component: {fileID: 604595537}
   m_Layer: 5
   m_Name: PasswordInput
   m_TagString: Untagged
@@ -3821,9 +3824,9 @@ MonoBehaviour:
   m_OnSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 604595536}
-        m_TargetAssemblyTypeName: ValidatorsEnabler, Assembly-CSharp
-        m_MethodName: EnableScript
+      - m_Target: {fileID: 317375155}
+        m_TargetAssemblyTypeName: ClearLoginErrors, Assembly-CSharp
+        m_MethodName: ClearPasswordError
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3836,7 +3839,7 @@ MonoBehaviour:
   m_OnDeselect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 604595536}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ValidatorsEnabler, Assembly-CSharp
         m_MethodName: DisableScript
         m_Mode: 1
@@ -3925,31 +3928,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5fd9da8daec23f4a9e4c309058f9096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &604595536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 604595529}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6f10ab56df20a41848088615e721a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &604595537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 604595529}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd9cc4d5c772f57449a7ed9353029d0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  errorTMP: {fileID: 1743780209}
 --- !u!1 &614059586
 GameObject:
   m_ObjectHideFlags: 0
@@ -6408,7 +6386,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1049611744
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6443,7 +6421,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1049611743}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -6461,7 +6439,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   username: {fileID: 843569930}
   password: {fileID: 720990866}
+  confirmPass: {fileID: 286690557}
   email: {fileID: 175211049}
+  usernameErrorField: {fileID: 1370951400}
+  passwordErrorField: {fileID: 352067055}
+  confirmPassErrorField: {fileID: 1758670926}
+  emailErrorField: {fileID: 238357262}
 --- !u!1 &1050246105
 GameObject:
   m_ObjectHideFlags: 0
@@ -7936,6 +7919,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578ff4387fdb201408fe44fd93587e5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  usernameInput: {fileID: 843569930}
+  passwordInput: {fileID: 720990866}
+  confirmPass: {fileID: 286690557}
+  email: {fileID: 175211049}
+  loginUsernameInput: {fileID: 9800104}
+  loginPasswordInput: {fileID: 604595531}
 --- !u!1 &1368026190
 GameObject:
   m_ObjectHideFlags: 0
@@ -8122,6 +8111,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1370951400}
   m_CullTransparentMesh: 1
+--- !u!1 &1412580624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1412580626}
+  - component: {fileID: 1412580625}
+  - component: {fileID: 1412580627}
+  m_Layer: 0
+  m_Name: StandAlone Scripts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1412580625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412580624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d503ee3179a10b4c812296330b96bc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1412580626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412580624}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.6674466, y: -1.4550457, z: 15.274721}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1412580627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412580624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc01ac1bd6b21e042b8cd7d9d5f298c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1464118327
 GameObject:
   m_ObjectHideFlags: 0
@@ -12737,6 +12783,7 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1412580626}
   - {fileID: 702413259}
   - {fileID: 1528921434}
   - {fileID: 1896518236}
