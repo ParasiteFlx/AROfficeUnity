@@ -1,3 +1,4 @@
+using Firebase.Auth;
 using Firebase.Firestore;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ public class Login : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI usernameErrorField, passwordErrorField;
 
-    private bool EmptyFieldCheck()
+    private bool EmptyFieldCheck(bool forgotPassword)
     {
         bool emptyFields = false;
         if (username.text.Length > 0)
@@ -28,21 +29,25 @@ public class Login : MonoBehaviour
             emptyFields = true;
         }
 
-        if (password.text.Length > 0)
+        if(!forgotPassword)
         {
-
-            if (passwordErrorField.GetComponent<TextMeshProUGUI>().text.Equals("Field is empty!"))
+            if (password.text.Length > 0)
             {
 
-                passwordErrorField.GetComponent<TextMeshProUGUI>().text = "";
+                if (passwordErrorField.GetComponent<TextMeshProUGUI>().text.Equals("Field is empty!"))
+                {
+
+                    passwordErrorField.GetComponent<TextMeshProUGUI>().text = "";
+                }
+            }
+            else
+            {
+
+                passwordErrorField.GetComponent<TextMeshProUGUI>().text = "Field is empty!";
+                emptyFields = true;
             }
         }
-        else
-        {
-
-            passwordErrorField.GetComponent<TextMeshProUGUI>().text = "Field is empty!";
-            emptyFields = true;
-        }
+     
         return emptyFields;
     }
 
@@ -56,7 +61,7 @@ public class Login : MonoBehaviour
     public async void LoginUserAsync()
     {
       
-        bool emptyFields = EmptyFieldCheck();
+        bool emptyFields = EmptyFieldCheck(false);
 
         if (!emptyFields) {
             
@@ -81,6 +86,25 @@ public class Login : MonoBehaviour
             }     
         }
      
+    }
+
+    public async void ForgotPassword()
+    {
+        bool emptyFields = EmptyFieldCheck(true);
+        if (!emptyFields)
+        {
+            DocumentSnapshot snapshot = await UsernameExistsAsync(username.text);
+            if (snapshot.Exists)
+            {
+                FirebaseInitialiser.Auth.SendPasswordResetEmailAsync(snapshot.GetValue<string>("Email"));
+                AndroidToast.sendToast("Password reset email sent!");
+            }
+            else
+            {
+                AndroidToast.sendToast("Username does not exist!");
+            }
+        }
+      
     }
 
 }

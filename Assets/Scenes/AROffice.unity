@@ -4087,8 +4087,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -225.6, y: -127}
-  m_SizeDelta: {x: 301.2, y: 86.79}
+  m_AnchoredPosition: {x: -112.2, y: -149.03}
+  m_SizeDelta: {x: 578.28, y: 42.73}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &674389928
 MonoBehaviour:
@@ -6098,7 +6098,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 63, y: -12}
+  m_AnchoredPosition: {x: -63.8, y: 1.6}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &984850882
@@ -7675,8 +7675,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -234, y: -96}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -111.8, y: -96}
+  m_SizeDelta: {x: 472.18, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1262940663
 MonoBehaviour:
@@ -7721,7 +7721,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1262940664}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 317375154}
+        m_TargetAssemblyTypeName: Login, Assembly-CSharp
+        m_MethodName: ForgotPassword
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1262940664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8724,7 +8736,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 113.6, y: 0}
+  m_AnchoredPosition: {x: -20, y: 0}
   m_SizeDelta: {x: 209.93, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1553762991
