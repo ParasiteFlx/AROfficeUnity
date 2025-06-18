@@ -10,6 +10,8 @@ using System.Diagnostics.Tracing;
 
 public class Transitions : MonoBehaviour
 {
+    [SerializeField]
+    private EditSaveButton editSaveButton;
     private ARAnchorManager arAnchorManager;
     private Transform initialCamera;
     public List<GameObject> activeMenu = new List<GameObject>();
@@ -509,4 +511,8 @@ public class Transitions : MonoBehaviour
         target.blocksRaycasts = true;
     }
 
+    public EditSaveButton GetEditSaveButton()
+    {
+        return editSaveButton;
+    }
 }

@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.Rendering;
 using UnityEngine;
 
 public class ListOfNotesUI : MonoBehaviour
 {
     private LinkedList<GameObject> listOfNotes = new LinkedList<GameObject>();
-    private List<Note> notesData = new List<Note>();
     [SerializeField]
     private GameObject uiNotePrefab;
     private GameObject plusButton, currentObject;
@@ -26,7 +26,7 @@ public class ListOfNotesUI : MonoBehaviour
 
     private void FillListOfNotes()
     {
-        notesData = Notes.getNotesListDeleg();
+        List<Note> notesData = Notes.getNotesListDeleg();
        
         if(notesData.Count > 0 )
         {
@@ -34,12 +34,22 @@ public class ListOfNotesUI : MonoBehaviour
             {
                 GameObject newNoteUI = Instantiate(uiNotePrefab);
                 newNoteUI.transform.SetParent(this.gameObject.transform);
-                newNoteUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = note.title;
+                AssociatedDetails associatedDetails = newNoteUI.GetComponent<AssociatedDetails>();
+                associatedDetails.SetNoteData(note);
                 newNoteUI.transform.SetPositionAndRotation(plusButton.transform.position, plusButton.transform.rotation);
                 listOfNotes.AddLast(newNoteUI);
             }
         }
         listOfNotes.AddLast(plusButton);
+
+        if (listOfNotes.Count > 1 && listOfNotes.First.Value != plusButton) 
+        {
+            currentObject.gameObject.SetActive(false);
+            currentObject = listOfNotes.First.Value;
+            currentObject.gameObject.SetActive(true);
+        }
+
+
     }
 
     public LinkedList<GameObject> GetListOfNotes()
@@ -51,9 +61,11 @@ public class ListOfNotesUI : MonoBehaviour
     {
         GameObject newNoteUI = Instantiate(uiNotePrefab);
         newNoteUI.transform.SetParent(this.gameObject.transform);
-        newNoteUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = Notes.getTempNoteDeleg().title;
+        AssociatedDetails associatedDetails = newNoteUI.GetComponent<AssociatedDetails>();
+        associatedDetails.SetNoteData(Notes.getTempNoteDeleg());
         newNoteUI.transform.SetPositionAndRotation(plusButton.transform.position, plusButton.transform.rotation);
         listOfNotes.AddBefore(listOfNotes.Last, newNoteUI);
+        currentObject = newNoteUI;
     }
 
    

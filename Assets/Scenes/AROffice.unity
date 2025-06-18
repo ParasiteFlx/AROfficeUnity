@@ -10782,6 +10782,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   editTitle: {fileID: 627449946}
   editContent: {fileID: 132145999}
+  saveButton: {fileID: 1705741079}
 --- !u!1 &1300960155
 GameObject:
   m_ObjectHideFlags: 0
@@ -14308,7 +14309,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1705741080}
   m_OnClick:
     m_PersistentCalls:
@@ -15639,6 +15640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a6f3173a3f8600408a10446fa796b25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  editSaveButton: {fileID: 1705741082}
   activeMenu: []
   previousMenu: []
   mainMenuButtons: []

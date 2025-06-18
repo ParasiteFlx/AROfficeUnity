@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 public class Notes : MonoBehaviour
 {
@@ -30,6 +30,8 @@ public class Notes : MonoBehaviour
         notesList = new List<Note>();
         setNoteListDeleg = SetNotesList;
         getNotesListDeleg = GetNotesList;
+       // TestNotes();
+       // SaveNotes();
         LoadNotes();
         temporaryNote = new Note();
         setTempNoteDeleg = SetTemporaryNote;
@@ -69,8 +71,7 @@ public class Notes : MonoBehaviour
     }
 
     private void addNoteData(Note note)
-    {
-        note.id = notesList.Count + 1;
+    {      
         notesList.Add(note);
         SaveNotes();
         LoadNotes();
@@ -98,26 +99,26 @@ public class Notes : MonoBehaviour
     {
         return temporaryNote;
     }
+
+    private void TestNotes()
+    {
+        notesList.Add(new Note("test", "ceva"));
+        notesList.Add(new Note("test2", "ceva2"));
+        notesList.Add(new Note("test3", "ceva3"));
+    }
 }
 
 [System.Serializable]
 public class Note
 {
-    public int id;
+    public string id;
     public string title;
     public string content;
     public string anchorUniqueId;
 
-    public Note(int id, string title, string content, string anchorUniqueId)
+    public Note(string title, string content, string anchorUniqueId)
     {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.anchorUniqueId = anchorUniqueId;
-    }
-
-    public Note( string title, string content, string anchorUniqueId)
-    {      
+        this.id = Guid.NewGuid().ToString(); 
         this.title = title;
         this.content = content;
         this.anchorUniqueId = anchorUniqueId;
@@ -125,13 +126,14 @@ public class Note
 
     public Note(string title, string content)
     {
+        this.id = Guid.NewGuid().ToString();
         this.title = title;
         this.content = content;       
     }
 
     public Note()
     {
-      
+        this.id = Guid.NewGuid().ToString();
     }
 }
 

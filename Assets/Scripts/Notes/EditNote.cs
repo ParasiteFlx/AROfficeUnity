@@ -10,22 +10,12 @@ public class EditNote : MonoBehaviour
     private CanvasGroup playUI, editNote;
     private TMP_InputField editTitle, editContent;
     private GameObject origin, currentNoteUi;
-    private LinkedList<GameObject> listOfNotesUI;
     private List<Note> notesData;
     private int noteNumber;
-    public delegate int GetNoteNumberDelegate();
-    public static GetNoteNumberDelegate getNoteNumberDeleg;
-    public delegate GameObject GetCurrentNoteUIDelegate();
-    public static GetCurrentNoteUIDelegate getCurrentNoteUI;
-    public delegate void SetCurrentNoteUIDelegat(GameObject newNoteUI);
-    public static SetCurrentNoteUIDelegat setCurrentNoteUI;
-    public delegate void SetListOfNotesUIDelegate();
-    public static SetListOfNotesUIDelegate setListOfNotesUIdeleg;
 
     private void Start()
-    {
-        listOfNotesUI = new LinkedList<GameObject>(ListOfNotesUI.getListOfNotesDeleg());
-        notesData = new List<Note>(Notes.getNotesListDeleg());
+    {       
+        notesData = Notes.getNotesListDeleg();
         origin = GameObject.FindGameObjectWithTag("origin");
         playUI = GameObject.FindGameObjectWithTag("play").GetComponent<CanvasGroup>();
         editNote = GameObject.FindGameObjectWithTag("editNote").GetComponent<CanvasGroup>();
@@ -34,41 +24,34 @@ public class EditNote : MonoBehaviour
         editTitle.enabled = false;
         editContent.enabled = false;
         this.GetComponent<Button>().onClick.AddListener(Transition);
-        getNoteNumberDeleg = GetNoteNumber;
-        getCurrentNoteUI = GetCurrentNoteUI;
-        setCurrentNoteUI = SetCurrentNoteUI;           
+            
     }
 
     private void SetDataInEdit()
     {
-        notesData = new List<Note>(Notes.getNotesListDeleg());
+       
+        currentNoteUi = this.gameObject;
+      
+        Debug.Log($"[EditNote] SetDataInEdit called. 'this.gameObject' (the clicked UI) is: {this.gameObject.name} (Instance ID: {this.gameObject.GetInstanceID()})");
+        Debug.Log($"[EditNote] 'currentNoteUi' field now holds: {currentNoteUi.name} (Instance ID: {currentNoteUi.GetInstanceID()})");
+
         noteNumber = -1;
-        foreach (GameObject noteUI in listOfNotesUI)
-        {
-
-            if (noteNumber < notesData.Count - 1)
-            {
-                noteNumber++;
+        AssociatedDetails associatedDetails = this.gameObject.GetComponent<AssociatedDetails>();
+        Note associatedNote = associatedDetails.GetAssociatedNote();
+        string targetNoteId = associatedNote.id;
+        editTitle.text = associatedNote.title;
+        editContent.text = associatedNote.content;
+        notesData = Notes.getNotesListDeleg();
+        for (int i = 0; i < notesData.Count; i++)
+        {          
+            Note currentNoteInList = notesData[i];
+       
+            if (currentNoteInList.id == targetNoteId)
+            {             
+                noteNumber = i;
+                break; 
             }
-
-            if (noteUI.Equals(this.gameObject))
-            {
-                Debug.Log("SetDataInEdit");
-                currentNoteUi = noteUI;
-                editTitle.text = notesData[noteNumber].title;
-                editContent.text = notesData[noteNumber].content;
-            }         
         }
-    }
-
-    public int GetNoteNumber()
-    {
-        return noteNumber;
-    }
-
-    public GameObject GetCurrentNoteUI()
-    {
-        return currentNoteUi;
     }
 
     public void SetCurrentNoteUI(GameObject newNoteUI)
@@ -76,15 +59,13 @@ public class EditNote : MonoBehaviour
         currentNoteUi = newNoteUI;
     }
 
-    public void SetListOfNotesUI()
-    {
-        listOfNotesUI = new LinkedList<GameObject>(ListOfNotesUI.getListOfNotesDeleg());
-    }
-
     public void Transition()
     {
         StartCoroutine(Transitions.Instance().CanvasFadeOut(playUI));
         SetDataInEdit();
+        EditSaveButton saveButton = Transitions.Instance().GetEditSaveButton();
+        saveButton.setCurrentNoteUI(currentNoteUi);
+        saveButton.setNoteNumber(noteNumber);
         StartCoroutine(Transitions.Instance().CanvasFadeIn(editNote));
         origin.GetComponent<PlaneSelection>().enabled = false;
     }
