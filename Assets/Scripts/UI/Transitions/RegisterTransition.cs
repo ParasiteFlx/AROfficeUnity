@@ -24,6 +24,7 @@ public class RegisterTransition : MonoBehaviour
         registerForm = gameObject.transform.GetChild(1).gameObject;
         registerCanvasGroup = registerForm.GetComponent<CanvasGroup>();
         menu = GameObject.FindGameObjectWithTag("menu");
+        StartCoroutine(Transitions.Instance().CanvasFadeIn(loginCanvasGroup));
     }
 
     public void FromLoginToRegister()
@@ -43,18 +44,18 @@ public class RegisterTransition : MonoBehaviour
 
     private IEnumerator FromLoginToRegisterCoroutine()
     {
-        yield return StartCoroutine(FadeOut(loginCanvasGroup));
+        yield return StartCoroutine(Transitions.Instance().CanvasFadeOut(loginCanvasGroup));
         loginUsernameInput.text = "";
         loginPasswordInput.text = "";
         loginForm.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         registerForm.SetActive(true);
-        yield return StartCoroutine(FadeIn(registerCanvasGroup));
+        yield return StartCoroutine(Transitions.Instance().CanvasFadeIn(registerCanvasGroup));
     }
 
     private IEnumerator FromRegisterToLoginCoroutine()
     {
-        yield return StartCoroutine(FadeOut(registerCanvasGroup));
+        yield return StartCoroutine(Transitions.Instance().CanvasFadeOut(registerCanvasGroup));
         usernameInput.text = "";
         passwordInput.text = "";
         confirmPass.text = "";
@@ -62,47 +63,16 @@ public class RegisterTransition : MonoBehaviour
         registerForm.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         loginForm.SetActive(true);
-        yield return StartCoroutine(FadeIn(loginCanvasGroup));
+        yield return StartCoroutine(Transitions.Instance().CanvasFadeIn(loginCanvasGroup));
     }
 
     private IEnumerator FromLoginToMainMenuCoroutine()
     {
-        yield return StartCoroutine(FadeOut(loginCanvasGroup));
+        yield return StartCoroutine(Transitions.Instance().CanvasFadeOut(loginCanvasGroup));
         loginForm.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         menu.GetComponent<MainMenu>().enabled = true;
     }
    
-    private IEnumerator FadeOut(CanvasGroup target)
-    {   
-        float fadeDuration = 0.5f;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Clamp01(1 - (elapsedTime / fadeDuration));
-            target.alpha = alpha;
-            yield return null;
-        }
-
-        target.alpha = 0f;
-    }
-
-    private IEnumerator FadeIn(CanvasGroup target)
-    {
-        float fadeDuration = 0.5f;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
-            target.alpha = alpha;
-            yield return null;
-        }
-
-        target.alpha = 1f;
-    }
 
 }

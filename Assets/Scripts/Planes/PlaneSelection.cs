@@ -20,9 +20,6 @@ public class PlaneSelection : MonoBehaviour
     {
         arRaycastManager = GetComponent<ARRaycastManager>();
         arPlaneManager = GetComponent<ARPlaneManager>();
-        /*GameObject buttonTextGameObject = GameObject.FindGameObjectWithTag("debug");
-        buttonText = buttonTextGameObject.GetComponent<TextMeshPro>();
-       */
     }
 
     private void OnEnable()

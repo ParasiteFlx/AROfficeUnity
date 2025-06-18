@@ -38,11 +38,14 @@ public class ButtonPress : MonoBehaviour
                     //if (Transitions.Instance().transitionEnded == true)
                     //{
                     if (buttonText.text.Equals("Play"))
-                    {
+                    {   
                         GameObject origin = GameObject.FindGameObjectWithTag("origin");
                         origin.GetComponent<ARPlaneManager>().enabled = true;
                         origin.GetComponent<PlaneControl>().enabled = true;
                         origin.GetComponent<PlaneSelection>().enabled = true;
+                        GameObject playUI = GameObject.FindGameObjectWithTag("play");
+                        playUI.GetComponent<PlayUITransition>().enabled = true;
+                        playUI.GetComponent<CanvasGroup>().interactable = true;
                         Transitions.Instance().TransitionStarter(Transitions.Instance().activeMenu, true);
                         Transitions.Instance().previousMenu = Transitions.Instance().mainMenuButtons;
                     }

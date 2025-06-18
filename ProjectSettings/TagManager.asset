@@ -22,6 +22,9 @@ TagManager:
   - confirmpass
   - userError
   - emailError
+  - editNote
+  - editTitle
+  - editContent
   layers:
   - Default
   - TransparentFX

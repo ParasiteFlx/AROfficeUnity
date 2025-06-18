@@ -473,6 +473,40 @@ public class Transitions : MonoBehaviour
 
     }
 
+    public IEnumerator CanvasFadeOut(CanvasGroup target)
+    {
+        float fadeDuration = 0.5f;
+        float elapsedTime = 0f;
 
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Clamp01(1 - (elapsedTime / fadeDuration));
+            target.alpha = alpha;
+            yield return null;
+        }
+
+        target.alpha = 0f;
+        target.interactable = false;
+        target.blocksRaycasts = false;
+    }
+
+    public IEnumerator CanvasFadeIn(CanvasGroup target)
+    {
+        float fadeDuration = 0.5f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
+            target.alpha = alpha;
+            yield return null;
+        }
+
+        target.alpha = 1f;
+        target.interactable = true;
+        target.blocksRaycasts = true;
+    }
 
 }

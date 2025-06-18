@@ -214,7 +214,6 @@ public class Options : MonoBehaviour
 public class CurrentOptions
 {
     public int transitionType;
-    public string transitionTypeName;
-    
+    public string transitionTypeName;   
 }
 
