@@ -1,8 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class ListOfNotesUI : MonoBehaviour
@@ -31,12 +27,20 @@ public class ListOfNotesUI : MonoBehaviour
         if(notesData.Count > 0 )
         {
             foreach (Note note in notesData)
-            {
-                GameObject newNoteUI = Instantiate(uiNotePrefab);
-                newNoteUI.transform.SetParent(this.gameObject.transform);
+            { 
+               
+                GameObject newNoteUI = Instantiate(uiNotePrefab, this.gameObject.transform, false);
+
+                RectTransform newNoteUIRectTransform = newNoteUI.GetComponent<RectTransform>();
+                RectTransform plusButtonRectTransform = plusButton.GetComponent<RectTransform>(); 
+
+                newNoteUIRectTransform.anchoredPosition = plusButtonRectTransform.anchoredPosition;
+                newNoteUIRectTransform.sizeDelta = plusButtonRectTransform.sizeDelta;
+                newNoteUIRectTransform.pivot = plusButtonRectTransform.pivot;
+                newNoteUIRectTransform.localScale = plusButtonRectTransform.localScale; 
+
                 AssociatedDetails associatedDetails = newNoteUI.GetComponent<AssociatedDetails>();
                 associatedDetails.SetNoteData(note);
-                newNoteUI.transform.SetPositionAndRotation(plusButton.transform.position, plusButton.transform.rotation);
                 listOfNotes.AddLast(newNoteUI);
             }
         }
@@ -56,14 +60,22 @@ public class ListOfNotesUI : MonoBehaviour
     {
         return listOfNotes;
     }
-
+    
     public void AddNote()
     {
-        GameObject newNoteUI = Instantiate(uiNotePrefab);
-        newNoteUI.transform.SetParent(this.gameObject.transform);
+        plusButton.SetActive(false);
+        GameObject newNoteUI = Instantiate(uiNotePrefab, this.gameObject.transform,false);        
         AssociatedDetails associatedDetails = newNoteUI.GetComponent<AssociatedDetails>();
         associatedDetails.SetNoteData(Notes.getTempNoteDeleg());
-        newNoteUI.transform.SetPositionAndRotation(plusButton.transform.position, plusButton.transform.rotation);
+        
+        RectTransform newNoteUIRectTransform = newNoteUI.GetComponent<RectTransform>();
+        RectTransform plusButtonRectTransform = plusButton.GetComponent<RectTransform>();
+        newNoteUIRectTransform.anchoredPosition = plusButtonRectTransform.anchoredPosition;
+        newNoteUIRectTransform.sizeDelta = plusButtonRectTransform.sizeDelta;
+        newNoteUIRectTransform.pivot = plusButtonRectTransform.pivot; 
+        newNoteUIRectTransform.localScale = plusButtonRectTransform.localScale;
+
+        newNoteUI.SetActive(true);
         listOfNotes.AddBefore(listOfNotes.Last, newNoteUI);
         currentObject = newNoteUI;
     }

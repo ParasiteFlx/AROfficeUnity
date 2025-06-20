@@ -10,7 +10,7 @@ public class SaveButton : MonoBehaviour
     [SerializeField]
     private GameObject plusButton;
     [SerializeField]
-    private CanvasGroup playUI, noteCreation;
+    private CanvasGroup playUI, noteCreation, notePlacement;
     [SerializeField]
     private TMP_InputField title, content;
 
@@ -27,14 +27,15 @@ public class SaveButton : MonoBehaviour
         tempNote.content = content.text;
         Debug.Log(tempNote.title + " si " + tempNote.content);
         Notes.setTempNoteDeleg(tempNote);
+        Notes.addNoteDeleg(tempNote);
         title.text = "";
         content.text = "";
     }
 
     private void transitionOut()
     {
-        StartCoroutine(Transitions.Instance().CanvasFadeOut(noteCreation));
-        StartCoroutine(Transitions.Instance().CanvasFadeIn(playUI));      
+        StartCoroutine(Transitions.Instance().CanvasFadeOut(noteCreation));     
+        StartCoroutine(Transitions.Instance().CanvasFadeIn(notePlacement));
         origin.GetComponent<PlaneSelection>().enabled = true;
     }
     

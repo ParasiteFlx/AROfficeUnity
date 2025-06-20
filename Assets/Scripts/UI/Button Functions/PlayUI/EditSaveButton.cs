@@ -24,13 +24,11 @@ public class EditSaveButton : MonoBehaviour
         notesData = Notes.getNotesListDeleg();
         notesData[noteNumber].title = editText.text;
         notesData[noteNumber].content = editContent.text;
-        Notes.setNoteListDeleg(notesData);       
-        Debug.Log($"[EditSaveButton] Attempting to update UI text on: {currentNoteUI.name} (Instance ID: {currentNoteUI.GetInstanceID()})");
-        if (currentNoteUI != null) {
-            Debug.Log("Nu e null");
-        }
+        Notes.setNoteListDeleg(notesData);            
         currentNoteUI.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = editText.text;
-        
+        currentNoteUI.GetComponent<AssociatedDetails>().SetNoteData(notesData[noteNumber]);
+        editText.enabled = false;
+        editContent.enabled = false;
     }
 
     public void setCurrentNoteUI(GameObject currentNoteUI)

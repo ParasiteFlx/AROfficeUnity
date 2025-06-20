@@ -31,10 +31,7 @@ public class EditNote : MonoBehaviour
     {
        
         currentNoteUi = this.gameObject;
-      
-        Debug.Log($"[EditNote] SetDataInEdit called. 'this.gameObject' (the clicked UI) is: {this.gameObject.name} (Instance ID: {this.gameObject.GetInstanceID()})");
-        Debug.Log($"[EditNote] 'currentNoteUi' field now holds: {currentNoteUi.name} (Instance ID: {currentNoteUi.GetInstanceID()})");
-
+       
         noteNumber = -1;
         AssociatedDetails associatedDetails = this.gameObject.GetComponent<AssociatedDetails>();
         Note associatedNote = associatedDetails.GetAssociatedNote();
