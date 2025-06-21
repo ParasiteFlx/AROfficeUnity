@@ -17,15 +17,15 @@ public class KeyboardVisibility : MonoBehaviour
     { 
         if(TouchScreenKeyboard.visible == false)
         {
-            Debug.Log("Chiar dispare keyboardVisibility");
+            //Debug.Log("Chiar dispare keyboardVisibility");
             if (EventSystem.current != null && inputField != null && inputField.isFocused)
             {              
                 EventSystem.current.SetSelectedGameObject(null);
-                Debug.Log("EventSystem.SetSelectedGameObject(null) apelat.");
+               // Debug.Log("EventSystem.SetSelectedGameObject(null) apelat.");
             }
             else if (inputField != null && !inputField.isFocused)
             {               
-                Debug.Log("InputField deja nu mai era focusat când tastatura a dispărut.");
+                //Debug.Log("InputField deja nu mai era focusat când tastatura a dispărut.");
             }                          
             this.gameObject.GetComponent<KeyboardVisibility>().enabled = false;
         }

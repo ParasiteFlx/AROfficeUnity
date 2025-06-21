@@ -9,6 +9,9 @@ public class ListOfNotesUI : MonoBehaviour
     private GameObject plusButton, currentObject;
     public delegate LinkedList<GameObject> GetListOfNotesDelegate();
     public static GetListOfNotesDelegate getListOfNotesDeleg;
+    public delegate void RemoveNoteDelegate(GameObject noteToBeRemoved);
+    public static RemoveNoteDelegate removeNoteDeleg;
+
    
 
     void Start()
@@ -17,6 +20,7 @@ public class ListOfNotesUI : MonoBehaviour
         currentObject = plusButton;
         FillListOfNotes();
         getListOfNotesDeleg = GetListOfNotes;
+        removeNoteDeleg = RemoveNote;
  
     }
 
@@ -78,6 +82,38 @@ public class ListOfNotesUI : MonoBehaviour
         newNoteUI.SetActive(true);
         listOfNotes.AddBefore(listOfNotes.Last, newNoteUI);
         currentObject = newNoteUI;
+    }
+
+    public void RemoveNote(GameObject noteToBeRemoved)
+    {
+        noteToBeRemoved.SetActive(false);
+        LinkedListNode<GameObject> nodeToBeRemoved = listOfNotes.Find(noteToBeRemoved);
+        LinkedListNode<GameObject> previousNode = listOfNotes.Find(noteToBeRemoved).Previous;
+        LinkedListNode<GameObject> nextNode = listOfNotes.Find(noteToBeRemoved).Next;
+
+        if(previousNode!= null)
+        {
+            previousNode.Value.SetActive(true);
+            currentObject = previousNode.Value;
+            EditNote.setCurrentNoteUIDeleg(currentObject);
+        }
+        else
+        {  if(nextNode!=null)
+           {
+                nextNode.Value.SetActive(true);
+                currentObject = nextNode.Value;
+                EditNote.setCurrentNoteUIDeleg(currentObject);
+            }
+            else
+            {
+                plusButton.SetActive(true);
+                currentObject = plusButton;              
+            }
+
+        }
+
+            listOfNotes.Remove(nodeToBeRemoved);
+            Destroy(noteToBeRemoved.gameObject);
     }
 
    

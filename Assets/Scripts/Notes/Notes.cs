@@ -13,6 +13,8 @@ public class Notes : MonoBehaviour
     private GameObject parentUI;
     public delegate void AddNoteDataDelegate(Note note);
     public static AddNoteDataDelegate addNoteDeleg;
+    public delegate void RemoveNoteDataDelegate(Note note);
+    public static RemoveNoteDataDelegate removeNoteDeleg;
     public delegate List<Note> GetNoteListDelegate();
     public delegate void SetNoteListDelegate(List<Note> updatedNoteList);
     public static SetNoteListDelegate setNoteListDeleg;
@@ -40,7 +42,8 @@ public class Notes : MonoBehaviour
 
     void Start()
     {       
-        addNoteDeleg = addNoteData;       
+        addNoteDeleg = AddNoteData;
+        removeNoteDeleg = RemoveNoteData;
         Debug.Log(filePath);       
         //TestNotes();
         //SaveNotes();
@@ -48,13 +51,10 @@ public class Notes : MonoBehaviour
 
     private void SaveNotes()
     {
-        
-        if(notesList.Count > 0 )
-        {
-            notesListWrapper.notes = notesList;
-            string notes = JsonUtility.ToJson(notesListWrapper,true);
-            File.WriteAllText(filePath, notes);
-        }     
+         notesListWrapper.notes = notesList;
+         string notes = JsonUtility.ToJson(notesListWrapper,true);
+         File.WriteAllText(filePath, notes);
+            
     }
 
     private void LoadNotes()
@@ -70,9 +70,30 @@ public class Notes : MonoBehaviour
         notesList = notesListWrapper.notes;
     }
 
-    private void addNoteData(Note note)
+    private void AddNoteData(Note note)
     {      
         notesList.Add(note);
+        SaveNotes();
+        LoadNotes();
+    }
+
+    private void RemoveNoteData(Note note)
+    {
+        int indexToRemove = -1;
+        for (int i = 0; i < notesList.Count; i++)
+        {
+            if (notesList[i].id == note.id)
+            {
+                indexToRemove = i;
+                break; 
+            }
+        }
+
+        if (indexToRemove != -1)
+        {
+            notesList.RemoveAt(indexToRemove);         
+        }
+   
         SaveNotes();
         LoadNotes();
     }

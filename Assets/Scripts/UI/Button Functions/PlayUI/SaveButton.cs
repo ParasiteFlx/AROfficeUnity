@@ -21,7 +21,7 @@ public class SaveButton : MonoBehaviour
 
     public void AddNote()
     {
-        transitionOut();
+        TransitionOut();
         Note tempNote = Notes.getTempNoteDeleg();
         tempNote.title = title.text;
         tempNote.content = content.text;
@@ -32,10 +32,11 @@ public class SaveButton : MonoBehaviour
         content.text = "";
     }
 
-    private void transitionOut()
+    private void TransitionOut()
     {
-        StartCoroutine(Transitions.Instance().CanvasFadeOut(noteCreation));     
+        StartCoroutine(Transitions.Instance().CanvasFadeOut(noteCreation));
         StartCoroutine(Transitions.Instance().CanvasFadeIn(notePlacement));
+        origin.GetComponent<NotePlacement>().enabled = true;
         origin.GetComponent<PlaneSelection>().enabled = true;
     }
     

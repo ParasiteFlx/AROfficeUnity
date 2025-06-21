@@ -11,7 +11,7 @@ public class EventMiddleMan : MonoBehaviour
     public void SetOriginalInputFieldText(string originalText)
     {
         originalInputFieldText = originalText;
-        Debug.Log("Orignal Input Field Text setat : " + originalInputFieldText);
+       // Debug.Log("Orignal Input Field Text setat : " + originalInputFieldText);
     }
 
     public void SetCurrentInputFieldText(string currentText)
@@ -19,13 +19,13 @@ public class EventMiddleMan : MonoBehaviour
         if (currentText != originalInputFieldText)
         {
             currentInputFieldText = currentText;
-            Debug.Log("Current Input Field Text setat : " + currentInputFieldText);
+          //  Debug.Log("Current Input Field Text setat : " + currentInputFieldText);
         }
     }
 
     public void EndEditEventTriggered()
     {
-        Debug.Log("EndEditEventTriggered!");
+       // Debug.Log("EndEditEventTriggered!");
         this.gameObject.GetComponent<TMP_InputField>().text = currentInputFieldText;
     }
 }

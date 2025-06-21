@@ -12,9 +12,15 @@ public class EditNote : MonoBehaviour
     private GameObject origin, currentNoteUi;
     private List<Note> notesData;
     private int noteNumber;
+    public delegate GameObject GetCurrentNoteUiDelegate();
+    public static GetCurrentNoteUiDelegate getCurrentNoteUiDeleg;
+    public delegate void SetCurrentNoteUiDelegate(GameObject newNoteUi);
+    public static SetCurrentNoteUiDelegate setCurrentNoteUIDeleg;
 
     private void Start()
-    {       
+    {
+        getCurrentNoteUiDeleg = GetCurrentNodeUI;
+        setCurrentNoteUIDeleg = SetCurrentNoteUI;
         notesData = Notes.getNotesListDeleg();
         origin = GameObject.FindGameObjectWithTag("origin");
         playUI = GameObject.FindGameObjectWithTag("play").GetComponent<CanvasGroup>();
@@ -54,6 +60,11 @@ public class EditNote : MonoBehaviour
     public void SetCurrentNoteUI(GameObject newNoteUI)
     {
         currentNoteUi = newNoteUI;
+    }
+
+    public GameObject GetCurrentNodeUI()
+    {
+        return currentNoteUi;
     }
 
     public void Transition()

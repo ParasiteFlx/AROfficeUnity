@@ -13,7 +13,7 @@ public class OnValueChanged : MonoBehaviour
 
     public void OnValueChangedEvent()
     {        
-        Debug.Log("CurrentChangedText: " + inputField.text);
+        //Debug.Log("CurrentChangedText: " + inputField.text);
         this.gameObject.GetComponent<EventMiddleMan>().SetCurrentInputFieldText(inputField.text);
     }
 }
