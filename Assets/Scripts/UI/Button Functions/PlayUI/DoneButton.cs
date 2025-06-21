@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class DoneButton : MonoBehaviour
 {
-    GameObject note3D;
+    GameObject note3D, origin;
     public delegate void SetNote3DDelegate(GameObject note3DInstance);
     public static SetNote3DDelegate setNote3DDeleg;
 
     private void Start()
     {
+        origin = GameObject.FindGameObjectWithTag("origin");
         setNote3DDeleg = SetNote3D;
     }
 
