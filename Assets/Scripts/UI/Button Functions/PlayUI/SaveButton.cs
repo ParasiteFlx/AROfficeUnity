@@ -25,9 +25,8 @@ public class SaveButton : MonoBehaviour
         Note tempNote = Notes.getTempNoteDeleg();
         tempNote.title = title.text;
         tempNote.content = content.text;
-        Debug.Log(tempNote.title + " si " + tempNote.content);
-        Notes.setTempNoteDeleg(tempNote);
-        Notes.addNoteDeleg(tempNote);
+       // Debug.Log(tempNote.title + " si " + tempNote.content);
+        Notes.setTempNoteDeleg(tempNote);       
         title.text = "";
         content.text = "";
     }

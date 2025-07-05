@@ -1,6 +1,7 @@
 using Lean.Touch;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
@@ -54,7 +55,9 @@ public class NotePlacement : MonoBehaviour
                 note3D.transform.rotation = Quaternion.LookRotation(selectedPlane.transform.up, Vector3.up);
                 // Debug.Log("Selected Plane : " + selectedPlane.transform.rotation + " " + selectedPlane.transform.forward + " " + selectedPlane.transform.up + " " + selectedPlane.transform.eulerAngles);
                 //Debug.Log("3DNote dupa schimbare : " + note3D.transform.rotation + " " + note3D.transform.forward + " " + note3D.transform.up + " " + note3D.transform.eulerAngles);
-                note3D.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+                note3D.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);           
+                note3D.transform.GetComponentInChildren<TextMeshPro>().text = Notes.getTempNoteDeleg().title;
+
              
                 UpButton.setNote3DDeleg(note3D);          
                 DownButton.setNote3DDeleg(note3D);         

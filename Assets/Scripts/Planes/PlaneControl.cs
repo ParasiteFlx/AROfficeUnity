@@ -26,9 +26,7 @@ public class PlaneControl : MonoBehaviour
     void Start()
     {
         arPlaneManager = gameObject.GetComponent<ARPlaneManager>();
-        arRaycastManager = gameObject.GetComponent<ARRaycastManager>();
-       
-        
+        arRaycastManager = gameObject.GetComponent<ARRaycastManager>();     
     }
 
     // Update is called once per frame

@@ -11,7 +11,7 @@ public class Login : MonoBehaviour
     [SerializeField]
     private TMP_InputField username, password;
     [SerializeField]
-    private TextMeshProUGUI usernameErrorField, passwordErrorField;
+    private TextMeshProUGUI usernameErrorField, passwordErrorField, userID;
 
     private bool EmptyFieldCheck(bool forgotPassword)
     {
@@ -74,6 +74,7 @@ public class Login : MonoBehaviour
                 {
                     Firebase.Auth.AuthResult authResult = await FirebaseInitialiser.Auth.SignInWithEmailAndPasswordAsync(email, password.text);
                     RegisterTransition.fromLogToMainMenu();
+                    userID.text = authResult.User.UserId.Substring(0,7);
                 }
                 catch (Firebase.FirebaseException authException)
                 {

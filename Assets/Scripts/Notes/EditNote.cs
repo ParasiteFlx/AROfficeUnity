@@ -16,26 +16,24 @@ public class EditNote : MonoBehaviour
     public static GetCurrentNoteUiDelegate getCurrentNoteUiDeleg;
     public delegate void SetCurrentNoteUiDelegate(GameObject newNoteUi);
     public static SetCurrentNoteUiDelegate setCurrentNoteUIDeleg;
-
     private void Start()
     {
-        getCurrentNoteUiDeleg = GetCurrentNodeUI;
-        setCurrentNoteUIDeleg = SetCurrentNoteUI;
-        notesData = Notes.getNotesListDeleg();
         origin = GameObject.FindGameObjectWithTag("origin");
         playUI = GameObject.FindGameObjectWithTag("play").GetComponent<CanvasGroup>();
         editNote = GameObject.FindGameObjectWithTag("editNote").GetComponent<CanvasGroup>();
         editTitle = GameObject.FindGameObjectWithTag("editTitle").GetComponent<TMP_InputField>();
         editContent = GameObject.FindGameObjectWithTag("editContent").GetComponent<TMP_InputField>();
+        notesData = Notes.getNotesListDeleg();
+        getCurrentNoteUiDeleg = GetCurrentNodeUI;
+        setCurrentNoteUIDeleg = SetCurrentNoteUI;
         editTitle.enabled = false;
         editContent.enabled = false;
-        this.GetComponent<Button>().onClick.AddListener(Transition);
-            
+        this.GetComponent<Button>().onClick.AddListener(Transition);           
     }
 
-    private void SetDataInEdit()
+    private void SetDataInEdit( )
     {
-       
+     
         currentNoteUi = this.gameObject;
        
         noteNumber = -1;

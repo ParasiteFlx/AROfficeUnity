@@ -25,6 +25,7 @@ TagManager:
   - editNote
   - editTitle
   - editContent
+  - note3D
   layers:
   - Default
   - TransparentFX

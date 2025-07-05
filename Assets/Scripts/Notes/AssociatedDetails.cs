@@ -8,6 +8,8 @@ public class AssociatedDetails : MonoBehaviour
     private Note associatedNote;
     [SerializeField]
     TextMeshProUGUI title;
+    [SerializeField]
+    TextMeshPro title3D;
 
     public void SetNoteData(Note note)
     {
@@ -15,6 +17,10 @@ public class AssociatedDetails : MonoBehaviour
         if (title != null)
         {
             title.text = note.title;
+        }
+        if (title3D != null)
+        {
+            title3D.text = note.title;
         }
     }
     

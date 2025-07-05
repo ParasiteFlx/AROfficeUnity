@@ -28,9 +28,16 @@ public class ButtonPress : MonoBehaviour
             GameObject objectHit = hit.collider.gameObject;
             if (objectHit == gameObject)
             {
+                TextMeshPro buttonText;
 
-                TextMeshPro buttonText = objectHit.GetComponentInChildren<TextMeshPro>();
-
+                if (!objectHit.CompareTag("note3D"))
+                {
+                    buttonText = objectHit.GetComponentInChildren<TextMeshPro>();
+                }
+                else
+                {
+                    buttonText = null;
+                }
 
                 //Dau Enable la un script separat deoarece cand ma foloseam doar de ButtonPress event-ul OnFingerTap avea atatea subscribtii cate butoane aveau scriptul activ.
                 if (buttonText != null)
@@ -38,7 +45,7 @@ public class ButtonPress : MonoBehaviour
                     //if (Transitions.Instance().transitionEnded == true)
                     //{
                     if (buttonText.text.Equals("Play"))
-                    {   
+                    {
                         GameObject origin = GameObject.FindGameObjectWithTag("origin");
                         origin.GetComponent<ARPlaneManager>().enabled = true;
                         origin.GetComponent<PlaneControl>().enabled = true;
@@ -77,7 +84,7 @@ public class ButtonPress : MonoBehaviour
                     }
                     else if (buttonText.text.Equals("Default Settings"))
                     {
-                        Options.Instance().ResetDefaultOptions();                   
+                        Options.Instance().ResetDefaultOptions();
                     }
                     //}
                 }
@@ -102,9 +109,14 @@ public class ButtonPress : MonoBehaviour
                         Invoke("DelayMainMenuTransition", 2);
                         Transitions.Instance().activeMenu = Transitions.Instance().previousMenu;
                     }
-                    else if(objectHit.CompareTag("password"))
+                    else if (objectHit.CompareTag("password"))
                     {
                         objectHit.GetComponent<EyePassword>().enabled = true;
+                    }
+                    else if (objectHit.CompareTag("note3D"))
+                    {
+                        Debug.Log("ButtonPressMerge!");
+                        objectHit.GetComponent<TriggerEditUI>().TriggerUI();
                     }
                 }
 
