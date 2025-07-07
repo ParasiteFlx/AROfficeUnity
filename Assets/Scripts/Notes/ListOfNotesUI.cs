@@ -48,6 +48,7 @@ public class ListOfNotesUI : MonoBehaviour
 
     private void FillListOfNotes()
     {
+      
         List<Note> notesData = Notes.getNotesListDeleg();
        
         if(notesData.Count > 0 )

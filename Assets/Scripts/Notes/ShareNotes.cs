@@ -10,6 +10,10 @@ public class ShareNotes : MonoBehaviour
 {
     [SerializeField]
     TextMeshProUGUI userID;
+    [SerializeField]
+    TMP_InputField userIDToDownload;
+    [SerializeField]
+    CanvasGroup shareInterface, restartApp;
 
     public async void UploadSave()
     {
@@ -35,25 +39,57 @@ public class ShareNotes : MonoBehaviour
 
     }
 
-    private async Task<bool> FileExistsAsync(string userID)
+    public async void DownloadNotesAsync()
     {
-        string filePath = "users/" + userID;
-      
-        StorageReference fileRefference = FirebaseInitialiser.StorageReference.Child(filePath);
+        string notesPath = Application.persistentDataPath + "/Notes.json";
+        byte[] notesFile = await FileExistsAsync(userIDToDownload.text);
+        if(notesFile!= null)
+        {
+            File.WriteAllBytes(notesPath, notesFile);
+            AndroidToast.sendToast("Notes downloaded succesfully!");
+            StartCoroutine(Transitions.Instance().CanvasFadeOut(shareInterface));
+            StartCoroutine(Transitions.Instance().CanvasFadeIn(restartApp));
+          
+        }
+    }
+
+    public async void ResetNotesAsync()
+    {
+        string notesPath = Application.persistentDataPath + "/Notes.json";
+        byte[] notesFile = await FileExistsAsync(userID.text);
+        if (notesFile != null)
+        {
+            File.WriteAllBytes(notesPath, notesFile);
+            AndroidToast.sendToast("Notes downloaded succesfully!");
+            StartCoroutine(Transitions.Instance().CanvasFadeOut(shareInterface));
+            StartCoroutine(Transitions.Instance().CanvasFadeIn(restartApp));
+
+        }
+    }
+
+    private async Task<byte[]> FileExistsAsync(string userID)
+    {
+        long maxAllowedSize = 1 * 1024 * 1024;
+        byte[] fileBytes = null;
+        StorageReference folderRef = FirebaseInitialiser.StorageReference.Child("Users").Child(userID);
+        StorageReference fileRef = folderRef.Child("Notes.json");
         try
         {
-            StorageMetadata fileMetadata = await fileRefference.GetMetadataAsync();
-            return true;
-        }
-        catch(Firebase.Storage.StorageException exception)
-        {
-            if(exception.ErrorCode == StorageException.ErrorObjectNotFound)
+            fileBytes = await fileRef.GetBytesAsync(maxAllowedSize);
+            if(fileBytes.Length > 0)
             {
-
-                AndroidToast.sendToast("The save or the user does not exist!");
-                
+                return fileBytes;
             }
-            return false;
+            else
+            {
+                AndroidToast.sendToast("The user has no data available!");
+                return null; 
+            }
+        }
+        catch
+        {
+            AndroidToast.sendToast("The user has no data available or the data is corrupted!");
+            return null;
         }
     }
 }
