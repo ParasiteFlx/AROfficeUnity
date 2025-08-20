@@ -25,16 +25,19 @@ public class PlaneSelection : MonoBehaviour
     private void OnEnable()
     {
         LeanTouch.OnFingerTap += AlternativeSelection;
+        LeanTouch.OnFingerTap += PlaneRemoval;
+
     }
 
     private void OnDisable()
     {
         LeanTouch.OnFingerTap -= AlternativeSelection;
+        LeanTouch.OnFingerTap -= PlaneRemoval;
     }
 
     private void AlternativeSelection(LeanFinger finger)
     {
-        
+
         Ray ray = finger.GetStartRay(Camera.main);
         RaycastHit hit;
 
@@ -42,6 +45,7 @@ public class PlaneSelection : MonoBehaviour
         {
             if (hit.collider.gameObject.CompareTag("ARPlane"))
             {
+
                 if (previousPlane != null && previousPlane.gameObject.activeSelf == true)
                 {
                     previousPlane.GetComponent<LineRenderer>().startWidth = 0.005f;
@@ -61,6 +65,31 @@ public class PlaneSelection : MonoBehaviour
                     selectedPlane.GetComponent<LineRenderer>().startWidth = 0.03f;
                     selectedPlane.GetComponent<LineRenderer>().endWidth = 0.03f;
                     previousPlane = selectedPlane;
+                }
+
+
+            }
+        }
+    }
+
+    private void PlaneRemoval(LeanFinger finger)
+    {
+        Ray ray = finger.GetStartRay(Camera.main);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.gameObject.CompareTag("ARPlane"))
+            {
+                if (selectedPlane == hit.collider.gameObject)
+                {
+                    if (finger.TapCount == 2)
+                    {
+                        Debug.Log("DoubleTap!");
+                        ARPlane planeComponent = selectedPlane.gameObject.GetComponent<ARPlane>();
+                        PlaneControl.removePlaneDeleg(planeComponent);                                          
+                        selectedPlane = null;
+                    }
+                   
                 }
             }
         }
