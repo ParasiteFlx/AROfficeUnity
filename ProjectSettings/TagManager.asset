@@ -26,6 +26,7 @@ TagManager:
   - editTitle
   - editContent
   - note3D
+  - PlusButton
   layers:
   - Default
   - TransparentFX

@@ -16623,7 +16623,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525739297}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -18694,7 +18694,7 @@ GameObject:
   - component: {fileID: 1667982378}
   m_Layer: 5
   m_Name: PlusButton
-  m_TagString: Untagged
+  m_TagString: PlusButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

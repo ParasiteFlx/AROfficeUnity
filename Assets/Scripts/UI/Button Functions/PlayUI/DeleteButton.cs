@@ -25,6 +25,7 @@ public class DeleteButton : MonoBehaviour
         if (notes3D.Length == 0)
         {
             Debug.Log("E notes3D null");
+            AndroidToast.sendToast("This operation is not available. Try again in a few seconds!");
         }
         else
         {

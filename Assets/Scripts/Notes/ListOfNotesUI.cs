@@ -1,6 +1,7 @@
 ﻿using Google.XR.ARCoreExtensions;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
@@ -13,7 +14,7 @@ public class ListOfNotesUI : MonoBehaviour
     private LinkedList<GameObject> listOfNotes = new LinkedList<GameObject>();
     [SerializeField]
     private GameObject uiNotePrefab, note3DPrefab;
-    private GameObject plusButton, currentObject;
+    private GameObject plusButton, currentObject, old3DNote;
     public delegate LinkedList<GameObject> GetListOfNotesDelegate();
     public static GetListOfNotesDelegate getListOfNotesDeleg;
     public delegate void RemoveNoteDelegate(GameObject noteToBeRemoved);
@@ -85,6 +86,16 @@ public class ListOfNotesUI : MonoBehaviour
             currentObject.gameObject.SetActive(false);
             currentObject = listOfNotes.First.Value;
             currentObject.gameObject.SetActive(true);
+            /*AssociatedDetails details = currentObject.GetComponent<AssociatedDetails>();
+            GameObject[] threeDNotes = GameObject.FindGameObjectsWithTag("note3D");
+            foreach (GameObject threeDNote in threeDNotes )
+            {
+                GameObject threeDTitle = threeDNote.transform.GetChild(0).gameObject;
+                if( details.GetTitle3D().text.Equals(threeDTitle.GetComponent<TextMeshPro>().text))
+                { threeDNote.GetComponent<Outline>().enabled = true;
+                    old3DNote = threeDNote;
+                }
+            }*/
         }
 
 
@@ -198,6 +209,34 @@ public class ListOfNotesUI : MonoBehaviour
             currentObject.gameObject.SetActive(false);
             currentObject = previousNode.Value;
             currentObject.gameObject.SetActive(true);
+           /* if (currentObject!=plusButton)
+            {
+                Debug.Log("De pe aici 1?");
+                AssociatedDetails details = currentObject.GetComponent<AssociatedDetails>();
+                Debug.Log(details + "Asta e details");
+                if (details == null) { Debug.Log("details null"); }
+                GameObject[] threeDNotes = GameObject.FindGameObjectsWithTag("note3D");
+                if (threeDNotes == null) { Debug.Log("threeDNotes null"); }
+                foreach (GameObject threeDNote in threeDNotes)
+                {
+                    if (threeDNote == null)
+                    {
+                        Debug.Log("threeDNote1 null");
+                    }
+                        GameObject threeDTitle = threeDNote.transform.GetChild(0).gameObject;
+                    if (threeDTitle == null)
+                    {
+                        Debug.Log("threeDTitle null");
+                    }
+                        if (details.GetTitle3D().text.Equals(threeDTitle.GetComponent<TextMeshPro>().text))
+                    {
+                        threeDNote.GetComponent<Outline>().enabled = true;
+                        old3DNote.GetComponent<Outline>().enabled = false;
+                        old3DNote = threeDNote;
+                    }
+                }
+            }*/
+            
         }
     }
 
@@ -209,6 +248,27 @@ public class ListOfNotesUI : MonoBehaviour
             currentObject.gameObject.SetActive(false);
             currentObject = nextNode.Value;
             currentObject.gameObject.SetActive(true);
+           /*if (currentObject!=plusButton)
+            {
+                Debug.Log("De pe aici 2?");
+                AssociatedDetails details = currentObject.GetComponent<AssociatedDetails>();
+                if(details == null) { Debug.Log("details null"); }
+                GameObject[] threeDNotes = GameObject.FindGameObjectsWithTag("note3D");
+                if (threeDNotes == null) { Debug.Log("threeDNotes null"); }
+                foreach (GameObject threeDNote in threeDNotes)
+                {
+                    if (threeDNote == null) { Debug.Log("threeDNote1 null"); }
+                    GameObject threeDTitle = threeDNote.transform.GetChild(0).gameObject;
+                    if (threeDTitle == null) { Debug.Log("threeDTitle null"); }
+                    if (details.GetTitle3D().text.Equals(threeDTitle.GetComponent<TextMeshPro>().text))
+                    {
+                        threeDNote.GetComponent<Outline>().enabled = true;
+                        old3DNote.GetComponent<Outline>().enabled = false;
+                        old3DNote = threeDNote;
+                    }
+                }
+            }*/
+
         }
     }
 

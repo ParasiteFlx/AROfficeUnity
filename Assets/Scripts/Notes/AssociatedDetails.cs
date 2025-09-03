@@ -28,4 +28,9 @@ public class AssociatedDetails : MonoBehaviour
     {
         return associatedNote;
     }
+
+    public TextMeshPro GetTitle3D()
+    {
+        return title3D;
+    }
 }
